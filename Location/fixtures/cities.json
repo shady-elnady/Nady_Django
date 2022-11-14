@@ -1,0 +1,38 @@
+[
+  {
+    "model": "Location.City",
+    "pk": "Mansoura",
+    "fields": {
+      "native": "المنصوره",
+      "country": "Egypt",
+      "governorate": "Dakahlia"
+    }
+  },
+  {
+    "model": "Location.City",
+    "pk": "Sherbin",
+    "fields": {
+      "native": "شربين",
+      "country": "Egypt",
+      "governorate": "Dakahlia"
+    }
+  },
+  {
+    "model": "Location.City",
+    "pk": "Belqas",
+    "fields": {
+      "native": "بلقاس",
+      "country": "Egypt",
+      "governorate": "Dakahlia"
+    }
+  },
+  {
+    "model": "Location.City",
+    "pk": "Talkha",
+    "fields": {
+      "native": "طلخا",
+      "country": "Egypt",
+      "governorate": "Dakahlia"
+    }
+  }
+]

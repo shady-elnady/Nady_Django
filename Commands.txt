@@ -1,0 +1,168 @@
+pip install graphene-django
+    aniso8601-9.0.1
+    graphene-3.1.1
+    graphene-django-3.0.0
+    graphql-core-3.2.3
+    graphql-relay-3.2.0
+    promise-2.3
+    six-1.16.0
+    text-unidecode-1.3
+
+pip install django-filter
+    django-filter-22.1
+
+pip install python-decouple
+    python-decouple-3.6
+
+pip install django-graphql-jwt
+    PyJWT-2.5.0
+    django-graphql-jwt-0.3.4
+
+pip install graphene-django-optimizer
+    graphene-django-optimizer-0.9.1
+
+pip install django-debug-toolbar
+    django-debug-toolbar-3.7.0 # Need Django 4 but Django 3.2 > django-debug-toolbar = "^3.2.1"
+    tzdata-2022.4
+
+pip install graphene-file-upload
+    graphene-file-upload-1.3.0
+
+pip install graphene-django-plus
+    graphene-django-plus-4.5
+    need:
+        pip install graphene-django-optimizer 
+        pip install django-guardian
+            django-guardian-2.4.0
+
+
+pip install gunicorn
+    gunicorn-20.1.0
+
+pip install django-polymorphic-tree
+    django-js-asset-2.0.0
+    django-mptt-0.14.0
+    django-polymorphic-3.1.0
+    django-polymorphic-tree-2.1
+    django-tag-parser-3.2
+
+pip install django-spaghetti-and-meatballs
+    django-spaghetti-and-meatballs-0.4.2
+
+pip install django-import-export
+    defusedxml-0.7.1
+    diff-match-patch-20200713
+    django-import-export-2.9.0
+    et-xmlfile-1.1.0
+    markuppy-1.14
+    odfpy-1.4.1
+    openpyxl-3.0.10
+    pyyaml-6.0
+    tablib-3.2.1
+    xlrd-2.0.1
+    xlwt-1.3.0
+
+
+
+
+pip install graphene-gis
+    aniso8601-7.0.0             <-  9.0.1
+    graphene-2.1.9              <-  3.1.1
+    graphene-django-2.15.0      <-  3.0.0
+    graphql-core-2.3.2          <-  3.2.3
+    graphql-relay-2.0.1         <-  3.2.0
+    graphene-gis-0.0.7
+    rx-1.6.1
+    singledispatch-3.7.0
+
+
+pip install django-cursor-pagination
+
+
+pip install graphene-djmoney
+    https://www.uplift.ltd/posts/using-django-and-graphql-to-manage-money-and-finances-check-out-graphene-djmoney/
+    django-money-1.3.1
+    graphene-djmoney-0.1.3
+    psycopg2-binary-2.9.3
+    py-moneyed-0.8.0
+    
+    pip install django-money
+        https://github.com/django-money/django-money
+
+pip install geoip2
+    aiohttp-3.8.3
+    aiosignal-1.2.0
+    async-timeout-4.0.2
+    attrs-22.1.0
+    certifi-2022.9.24
+    charset-normalizer-2.1.1
+    frozenlist-1.3.1
+    geoip2-4.6.0
+    idna-3.4
+    maxminddb-2.2.0
+    multidict-6.0.2
+    requests-2.28.1
+    urllib3-1.26.12
+    yarl-1.8.1
+
+pip install graphene-django-extras
+    pip install python-dateutil  #  Date directive depends on dateutil module
+
+
+## Math Helper:
+    pip install sympy
+        https://docs.sympy.org/latest/index.html
+        https://problemsolvingwithpython.com/03-The-Python-REPL/03.01-Python-as-a-Calculator/
+        from sympy import symbols
+        x, y = symbols('x y')
+        expr = 2*x + y
+
+    pip install django-ckeditor
+        https://django-ckeditor.readthedocs.io/en/latest/#django-ckeditor
+
+    pip install pylatex
+        https://jeltef.github.io/PyLaTeX/current/
+
+## Chemistry Helper:
+    https://downloads.ccdc.cam.ac.uk/documentation/API/descriptive_docs/diagram.html#introduction
+
+    pip install chemplot
+        https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/cmtd.202200005
+    
+    pip install chemspipy
+        https://chemspipy.readthedocs.io/en/latest/guide/install.html
+
+    pip install pubchempy
+        https://pubchempy.readthedocs.io/en/latest/guide/install.html
+
+        LiberTexts:
+        https://chem.libretexts.org/Courses/Intercollegiate_Courses/Cheminformatics_OLCC_(2019)/03%3A_Database_Resources_in_Cheminformatics/3.08%3A_Python_Assignment
+
+
+
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py loaddata ingredients
+python manage.py runserver
+
+
+django-admin startproject Config .
+python manage.py startapp GraphQL
+python manage.py startapp User   
+python manage.py startapp Article
+python manage.py startapp Person 
+python manage.py startapp Utils 
+python manage.py startapp Tool 
+python manage.py startapp Facility
+python manage.py startapp Payment 
+python manage.py startapp Unit   
+python manage.py startapp Laboratory
+python manage.py startapp Language  
+python manage.py startapp Location
+python manage.py startapp Doctor   
+python manage.py startapp Product
+python manage.py startapp Entity 
+python manage.py startapp Patient
+python manage.py startapp Report 

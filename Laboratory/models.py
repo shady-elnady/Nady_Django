@@ -1,18 +1,17 @@
 from django.db import models
-from django.conf import settings
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
-import calendar
 
+from djongo.models import ArrayReferenceField
 from polymorphic.models import PolymorphicModel
 
 from GraphQL.models import BaseModel, BaseModelImageOnly, BaseModelName, FacilityTypes, Runs, Scores, upload_to
 from GraphQL.custom_fields import QRField
-from Payment.models import Currency
+from Payment.models import Payment
 from Unit.models import Unit
 from Facility.models import Branch, Facility, Shift
-from Product.models import Product
+from Product.models import LineInInvoice, Product
 from Person.models import Employee, Person, ReferenceLimitingFactor
 from Doctor.models import Doctor
 
@@ -303,7 +302,7 @@ class AntiBioticDisk(LabSupply):
         default= True,
         verbose_name= _("for Child /    gna   nt"),
     )
-    anti_biotic= unit= models.ForeignKey(
+    anti_biotic= models.ForeignKey(
         Product,
         on_delete= models.CASCADE,
         related_name= _("Anti_Biotic_Disks"),
@@ -333,7 +332,7 @@ class Analytics(BaseModelName): # مركب المراد تحليلها
     units = models.ManyToManyField(
         Unit,
         through= "AnalyticsUnit",
-        related_name= _("Analytics"),
+        # related_name= _("Analytics"),
         verbose_name= _("Units"),
     )
     
@@ -352,25 +351,18 @@ class AnalyticsUnit(models.Model):
     unit= models.ForeignKey(
         Unit,
         on_delete= models.CASCADE,
-        related_name= _("Parameters"),
+        # related_name= _("Analytics"),
         verbose_name= _("Unit"),
     )
-    convert_to_units= models.ManyToManyField(
-        "self",
-        througth= _("AnalyticsUnitConvert"),
-        verbose_name= _("Convert to Units"),
-    )
+    # convert_to_units= models.ManyToManyField(
+    #     "self",
+    #     through= _("AnalyticsUnitConvert"),
+    #     verbose_name= _("Convert to Units"),
+    # )
     is_default= models.BooleanField(
         default= True,
         verbose_name= _("Is Default"),
     )   
-
-    def __str__(self):
-        return f"{self.analytics.name}->{self.unit.symbol}"
-
-    @property
-    def slug(self):
-        return slugify(f"{self.analytics.name}->{self.unit.symbol}")
 
     class Meta:
         unique_together= [
@@ -389,7 +381,7 @@ class AnalyticsUnitConvert(models.Model):
     to_analytics_unit= models.ForeignKey(
         AnalyticsUnit,
         on_delete= models.CASCADE,
-        related_name= _("convert_to_units"),
+        related_name= _("Convert_To_Units"),
         verbose_name= _("Unit"),
     )
     factor= models.BooleanField(
@@ -463,11 +455,18 @@ class ReferenceRange(BaseModelName):
         blank= True,
         verbose_name= _("Highest Value"), 
     )
-    reference_range_expected_values= models.ManyToManyField(
-        ReferenceLimitingFactor,
-        through= "ReferenceRangeExpectedValue",
+    # TODO Many To Many Field Convert To >>>>>>>>>  
+    # reference_range_expected_values= models.ManyToManyField(
+    #     ReferenceLimitingFactor,
+    #     through= "ReferenceRangeExpectedValue",
+    #     verbose_name= _("Reference Range Expected Values"),
+    # )
+    reference_range_expected_values= ArrayReferenceField(
+        to="ReferenceRangeExpectedValue",
+        on_delete=models.CASCADE,
         verbose_name= _("Reference Range Expected Values"),
     )
+
     
     class Meta:
         verbose_name= _("Reference Range")
@@ -478,12 +477,12 @@ class ReferenceRangeExpectedValue(models.Model):
     reference_range= models.ForeignKey(
         ReferenceRange,
         on_delete= models.CASCADE,
-        related_name= _("Reference_Range"), 
+        related_name= _("reference_range_expected_values+"), 
         verbose_name= _("ReferenceRange"),
     )
     reference_limiting_factors = models.ManyToManyField(
         ReferenceLimitingFactor,
-        related_name= _("+"),
+        # related_name= _("+"),
         verbose_name= _("Reference Limiting Factors"),
     ) # Conditions شروط او متطلبات
     min_normal = models.FloatField(
@@ -513,13 +512,14 @@ class Kat(LabSupply):
     )
     analytical_technique= models.ForeignKey(
         AnalyticalTechnique,
+        on_delete= models.CASCADE,
         related_name= _("Kats"),
         verbose_name= _("Analytical Technique"),
     )
     samples= models.ManyToManyField(
-        Specimen,
+        Sample,
         through= "KatSample",
-        verbose_name= _("Specimens"),
+        verbose_name= _("Samples"),
     )
     analyzers= models.ManyToManyField(
         Analyzer,
@@ -640,6 +640,7 @@ class Analysis(PolymorphicModel, BaseModelName):
     analysis_methods= models.ManyToManyField(
         AnalyticalTechnique,
         through= "AnalysisMethod",
+        through_fields= ("analysis", "analytical_technique"),
         verbose_name= _("Analysis Methods"),
     )
     is_independent_report= models.BooleanField(
@@ -693,12 +694,33 @@ class AnalysisSpecimen(models.Model):
         verbose_name_plural= _("Analysis Specimens")
 
 
-
 class Report(Analysis):
-
+    
     class Meta:
         verbose_name= _("Report")
         verbose_name_plural= _("Reports")
+
+
+class Function(Analysis):
+
+    class Meta:
+        verbose_name= _("Function")
+        verbose_name_plural= _("Functions")
+
+
+class GroupAnalysis(Analysis):
+    belong_to_function= models.ForeignKey(
+        Function,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        related_name= _("Analysis_in_Function"),
+        verbose_name= _("Function"),
+    )
+
+    class Meta:
+        verbose_name= _("Group Analysis")
+        verbose_name_plural= _("Group Analysis")
 
 
 class Parameter(Analysis):
@@ -711,16 +733,33 @@ class Parameter(Analysis):
     sample= models.ForeignKey(
         Sample,
         null= True,
-        blamk= True,
+        blank= True,
         on_delete= models.CASCADE,
         related_name= _("Parameters"),
         verbose_name= _("Sample"),
     )
-    report= models.ForeignKey(
-        Report,
+    group= models.ForeignKey(
+        GroupAnalysis,
+        on_delete= models.CASCADE,
         null= True,
         blank= True,
-        related_name= _("Analysis_in_Report"),
+        related_name= _("Parameters_in_Group"),
+        verbose_name= _("Group"),
+    )
+    belong_to_function= models.ForeignKey(
+        Function,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        related_name= _("Parameters_in_Function"),
+        verbose_name= _("Function"),
+    )
+    belong_to_report= models.ForeignKey(
+        Report,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        related_name= _("Parameters_in_Report"),
         verbose_name= _("Report"),
     )
     reference_limiting_factors = models.ManyToManyField(
@@ -746,7 +785,7 @@ class AnalysisMethod(Analysis):
     analysis = models.ForeignKey(
         Analysis,
         on_delete= models.CASCADE,
-        # related_name= _("Analysis"),
+        related_name= _("Analysis"),
         verbose_name= _("Analysis"),
     )
     analytical_technique = models.ForeignKey(
@@ -754,6 +793,14 @@ class AnalysisMethod(Analysis):
         on_delete= models.CASCADE,
         related_name= _("Analysis"),
         verbose_name= _("Analytical Technique"),
+    )
+    departement = models.ForeignKey(
+        Departement,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        related_name= _("Analysis"),
+        verbose_name= _("Departement"),
     )
     price_for_patient= models.FloatField(
         null= True,
@@ -822,10 +869,10 @@ class AnalysisByCalculatedMethod(AnalysisMethod):
 
 
 class EquationParameter(models.Model):
-    parameter= models.ForeignKey(
-        Parameter,
+    calculated_parameter= models.ForeignKey(
+        AnalysisByCalculatedMethod,
         on_delete= models.CASCADE,
-        verbose_name= _("Parameter"),
+        verbose_name= _("Calculated Parameter"),
     )
     equation_parameter= models.ForeignKey(
         Parameter,
@@ -839,15 +886,15 @@ class EquationParameter(models.Model):
     )
 
     def __str__(self):
-        return f"{str(self.parameter)}->{str(self.equation_parameter)}"
+        return f"{str(self.calculated_parameter)}->{str(self.equation_parameter)}"
 
     @property
     def slug(self):
         return self.__str__()
 
     class Meta:
-        uniqe_together= [
-            ["parameter", "equation_parameter"],
+        unique_together= [
+            ["calculated_parameter", "equation_parameter"],
         ]
         verbose_name= _("Equation Parameter")
         verbose_name_plural= _("Equation Parameters")
@@ -870,10 +917,10 @@ class AnalysisByTechnique(AnalysisMethod):
     )
 
     class Meta:
-        unique_together = (
-            "analysis",
-            "analytical_technique",
-        )
+        # unique_together = (
+        #     "analysis",
+        #     "analytical_technique",
+        # )
         verbose_name= _("Analysis By Technique")
         verbose_name_plural= _("Analysis By Techniques")
 
@@ -903,18 +950,18 @@ class Lab2LabMenu(AnalysisMethod):
         on_delete= models.CASCADE,
         blank= True,
         null= True,
-        related_name= _("Kat_Samples"),
+        related_name= _("Kat_Samples+"),
         verbose_name= _("Reference Range"),
     )
 
     class Meta:
-        unique_together = [
-            [
-                "analysis",
-                "analysis_by_technique",
-                "laboratory",
-            ]
-        ]
+        # unique_together = [
+        #     [
+        #         "analysis",
+        #         "analysis_by_technique",
+        #         "laboratory",
+        #     ]
+        # ]
         verbose_name= _("Lab2Lab Menu")
         verbose_name_plural= _("Lab2Lab Menus")
 
@@ -922,59 +969,13 @@ class Lab2LabMenu(AnalysisMethod):
 class Package(Analysis): # زى التحاليل الشامل
     analysis_in_package= models.ManyToManyField(
         Analysis,
-        # related_name= _("+"), 
+        related_name= _("Package"), 
         verbose_name= _("Analysis in Package"),
     )
 
     class Meta:
         verbose_name= _("Package")
         verbose_name_plural= _("Packages")
-
-
-class Function(Analysis):
-    analysis_in_function= models.ManyToManyField(
-        Analysis,
-        # related_name= _("+"), 
-        verbose_name= _("Analysis in Function"),
-    )
-
-    class Meta:
-        verbose_name= _("Function")
-        verbose_name_plural= _("Functions")
-
-
-class GroupAnalysis(Analysis):
-    analysis_in_group= models.ManyToManyField(
-        Analysis,
-        # related_name= _("+"), 
-        verbose_name= _("Analysis in Group"),
-    )
-    report= models.ForeignKey(
-        Report,
-        null= True,
-        blank= True,
-        related_name= _("Analysis_in_Report"),
-        verbose_name= _("Report"),
-    )
-
-    class Meta:
-        verbose_name= _("Group Analysis")
-        verbose_name_plural= _("Group Analysis")
-
-
-class GroupAnalysisImage(Analysis, BaseModelImageOnly):
-    group_analysis= models.ForeignKey(
-        Analysis,
-        on_delete= models.CASCADE,
-        related_name= _("Image"), 
-        verbose_name= _("Group Analysis"),
-    )
-
-    class Meta:
-        verbose_name= _("Group Analysis Image")
-        verbose_name_plural= _("Group Analysis Images")
-
-
 
 
 ###########################################################################################
@@ -1109,12 +1110,17 @@ class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
         related_name= _("Prescriptions"),
         verbose_name= _("Patient"),
     )
+    receptionist= models.ManyToManyField(
+        Employee,
+        through= "PrescriptionEmployeeActivity",
+        verbose_name= _("Receptionist"),
+    ) # موظف الاستقبال
     treating_doctor= models.ForeignKey(
         Doctor,
         on_delete= models.CASCADE,
         blank= True,
         null= True,
-        related_name= _("Prescriptions"),
+        related_name= _("Writed_Prescriptions"),
         verbose_name= _("Treating Doctor"),
     )
     transfer_destination= models.ForeignKey(
@@ -1126,39 +1132,33 @@ class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
         related_name= _("Prescriptions"),
         verbose_name= _("Transfer Destination"),
     ) # جهةالتحويل
-    visits= models.ManyToManyField(
-        Employee,
-        through= "Visit",
-        verbose_name= _("Visits"),
-    )
-    required_in_date= models.DateTimeField(
+    phlebotomy_required_time= models.DateTimeField(
         default= now,
         editable= True,
-        verbose_name= _("Required in Date"),
-    )
-    is_reservation= models.BooleanField(
-        default= False,
-        verbose_name= _("is Reservation"),
-    ) # حجز
+        verbose_name= _("Phlebotomy Required Time"),
+    ) # الوقت المطلوب للسحب
     expected_receipt_time= models.DateTimeField(
         null= True,
         blank= True,
         verbose_name= _("Expected Receipt Time"),
     ) # وقت الاستلام المتوقع
-    cost= models.FloatField(
-        verbose_name= _("Cost"),
-    )
     discount= models.FloatField(
         default= 0,
         verbose_name= _("Discount"),
     )
-    currency = models.ForeignKey(
-        Currency,
-        default= settings.DEFAULT_CURRENCY,
-        on_delete= models.CASCADE,
-        # related_name= _("Prescriptions"),
-        verbose_name= _("Currency"),
-    )
+    prescription_vital_Signs= models.ManyToManyField(
+        VitalSign,
+        through= "PrescriptionVitalSign",
+        verbose_name= _("Prescription Vital Signs"),
+    ) # المؤشرات الحيويه للمريض بالزياره
+    # payments= models.ManyToManyField(
+    #     Payment,
+    #     through= "PrescriptionPayment",
+    #     verbose_name= _("Payments"),
+    # )
+
+    # @property
+    # cost
 
     # @property
     # def all_required_analysis(self) -> list:
@@ -1166,165 +1166,184 @@ class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
     #     for visit in self.visits.all():
     #         for VisitAnalysis in visit.required_analysis.all():
     #             all_analysis.append(VisitAnalysis.analysis)
-    #     return all_analysis
+    #     return all_analysis      
     
     class Meta:
         verbose_name= _("Prescription")
         verbose_name_plural= _("Prescriptions")
 
 
-class Visit(models.Model):
+class Phlebotomy(models.Model):
     prescription= models.ForeignKey(
         Prescription,
         on_delete= models.CASCADE,
-        # related_name= _("Visits"),
+        related_name= _("Phlebotomy_Sessions"),
         verbose_name= _("Prescription"),
     )
-    # TODO Employee Activity
-    employee= models.ManyToManyField(
-        Employee,
-        through= "EmployeeActivity",
-        verbose_name= _("Employee"),
-    )
-    external_phlebotomy= models.ForeignKey(
-        Employee,
-        on_delete= models.SET("Deleted"),
-        null= True,
-        blank= True,
-        related_name= _("Visit_External_Phlebotomy"),
-        verbose_name= _("External Phlebotomy"),
-    ) # سحب خارجى
-    visit_patient_vital_Signs= models.ManyToManyField(
-        VitalSign,
-        through= "VisitPatientVitalSign",
-        verbose_name= _("Visit Patient Vital Signs"),
-    ) # المؤشرات الحيويه للمريض بالزياره
     required_analysis= models.ManyToManyField(
-        Analysis,
-        through= "VisitAnalysis",
-        related_name= _("Visits"),
+        AnalysisMethod,
+        # through= "",
+        # related_name= _("+"),
         verbose_name= _("Required Analysis"),
     )
+    specimens= models.ManyToManyField(
+        Specimen,
+        through= "PhlebotomySpecimen",
+        related_name= _("Phlebotomys"),
+        verbose_name= _("Specimens"),
+    )
+    phlebotomists= models.ManyToManyField(
+        Employee,
+        through= "PhlebotomyEmployeeActivity",
+        verbose_name= _("Phlebotomist"),
+    ) # فنى سحب دم
+    # TODO Employee Activity
     phlebotomy_time= models.DateTimeField(
         default= now,
         editable= True,
         verbose_name= _("Phlebotomy Time"),
     ) # وقت السحب
+    is_external_phlebotomy= models.BooleanField(
+        default= False,
+        verbose_name= _("is Phlebotomy Time"),
+    )
 
     class Meta:
-        verbose_name= _("Visit")
-        verbose_name_plural= _("Visits")
+        verbose_name= _("Prescription")
+        verbose_name_plural= _("Prescriptions")
 
 
-############################################################################################################################################
-
-class VisitAnalysis(models.Model):
-
-    class ResultDescription(models.TextChoices):
-        Low= "L", _("Low")
-        Normal= "N", _("Normal")
-        High= "H", _("High")
-    
-    visit= models.ForeignKey(
-        Visit,
+class PhlebotomySpecimen(models.Model):
+    phlebotomy= models.ForeignKey(
+        Phlebotomy,
         on_delete= models.CASCADE,
-        # related_name=_("%(app_label)s_%(class)s_Visit"),
-        verbose_name= _("Visit"),
+        verbose_name= _("Phlebotomy"),
     )
-    analysis= models.ForeignKey(
-        Analysis,
+    specimen= models.ForeignKey(
+        Specimen,
         on_delete= models.CASCADE,
-        related_name= _("Visits"),
-        verbose_name= _("Analysis"),
+        verbose_name= _("Specimen"),
     )
-    result= models.CharField(
-        max_length= 20,
-        verbose_name= _("Result"),
-    )
-    is_= models.BooleanField(
+    is_take_outSide= models.BooleanField(
         default= False,
-        verbose_name= _("Result"),
-    ) # هل تم المراجعه
-    is_= models.BooleanField(
-        default= False,
-        verbose_name= _("Result"),
-    ) # هل تم التسليم للمريض
-    result_description= models.CharField(
-        max_length= 2,
-        null= True,
-        blank= True,
-        choices= ResultDescription.choices,
-        verbose_name= _("Result Description"),
+        verbose_name= _("is Taken Out Side"),
     )
 
     class Meta:
         unique_together= [
-            ["visit", "analysis"],
+            ["phlebotomy", "specimen"],
         ]
-        verbose_name= _("Visit Analysis")
-        verbose_name_plural= _("Visits Analysis")
+        verbose_name= _("Phlebotomy Specimen")
+        verbose_name_plural= _("Phlebotomy Specimens")
 
+
+
+############################################################################################################################################
+# Payment
+class PrescriptionPayment(Payment):
+    prescription= models.ForeignKey(
+        Prescription,
+        on_delete= models.CASCADE,
+        related_name= _("Payments"),
+        verbose_name= _("Prescription"),
+    )
+    
+    class Meta:
+        verbose_name= _("Prescription Payment")
+        verbose_name_plural= _("Prescription Payments")
+
+
+############################################################################################################################################
+
+class PrescriptionReport(models.Model):
+    prescription= models.ForeignKey(
+        Prescription,
+        on_delete= models.CASCADE,
+        related_name= _("Reports"),
+        verbose_name= _("Prescription"),
+    )
+    report= models.ForeignKey(
+        Report,
+        on_delete= models.CASCADE,
+        # related_name= _("+"),
+        verbose_name= _("Report"),
+    )
+    comment= models.CharField(
+        max_length= 250,
+        null= True,
+        blank= True,
+        verbose_name= _("Comment"),
+    )
+    # employee_activities= models.ManyToManyField(
+    #     Employee,
+    #     through= "ReportEmployeeActivity",
+    #     # related_name= _("+"),
+    #     verbose_name= _("Employee Activities"),
+    # )
+
+    class Meta:
+        verbose_name= _("Prescription Report")
+        verbose_name_plural= _("Prescription Reports")
 
 ############################################################################################################################################
 
 class LineInReport(models.Model):
-    group_in_report = models.ForeignKey(
-        GroupInVisitReport,
-        on_delete=models.CASCADE,
-        verbose_name=_("Group In Report"),
-        related_name=_("%(app_label)s_%(class)s_Group_In_Report"),
+    analysis= models.ForeignKey(
+        AnalysisMethod,
+        on_delete= models.CASCADE,
+        related_name= _("%(app_label)s_%(class)s_Analysis"),
+        verbose_name= _("Analysis"),
     )
-    analysis = models.ForeignKey(
-        Analysis,
-        on_delete=models.CASCADE,
-        verbose_name=_("Analysis"),
-        related_name=_("%(app_label)s_%(class)s_Analysis"),
+    group= models.ForeignKey(
+        GroupAnalysis,
+        on_delete= models.CASCADE,
+        null= True,
+        blank= True,
+        # related_name= _("prescription_Parameters"),
+        verbose_name= _("Group"),
     )
-    value = 
-    unit = models.ForeignKey(
-        Unit,
-        on_delete=models.CASCADE,
-        verbose_name=_("Unit"),
-        related_name=_("%(app_label)s_%(class)s_Unit"),
+    super_analysis= models.ForeignKey(
+        "self",
+        on_delete= models.CASCADE,
+        related_name= _("Sub_Analysis"),
+        verbose_name= _("Super Analysis"),
     )
-    normal_range = models.ForeignKey(
-        NormalRange,
-        on_delete=models.CASCADE,
-        verbose_name=_("Unit"),
-        related_name=_("%(app_label)s_%(class)s_Unit"),
+    result= models.CharField(
+        max_length= 40,
+        verbose_name= _("Result"),
     )
-
-    @property
-    def unit(self):
-        return self.analysis.unit
-
-    def __str__(self):
-        return f"{str(self.group_in_report)}->{str(self.analysis)}"
-
-    @property
-    def slug(self):
-        return slugify(self.__str__)
 
     class Meta:
-        unique_together = [["group_in_report", "analysis"]]
         verbose_name = _("Line In Report")
         verbose_name_plural = _("Lines In Reports")
 
 
+class PrescriptionReportImage(Analysis, BaseModelImageOnly):
+    prescription_report= models.ForeignKey(
+        PrescriptionReport,
+        on_delete= models.CASCADE,
+        related_name= _("Images"), 
+        verbose_name= _("Prescription Report"),
+    )
+
+    class Meta:
+        verbose_name= _("Prescription Report Image")
+        verbose_name_plural= _("Prescription Report Images")
+
 ############################################################################################################################################
 
 
-class VisitPatientVitalSign(models.Model):  # المؤشرات الحيويه للمريض اثناء الزياره
-    visit= models.ForeignKey(
-        Visit,
+class PrescriptionVitalSign(models.Model):  # المؤشرات الحيويه للمريض اثناء الزياره
+    prescription= models.ForeignKey(
+        Prescription,
         on_delete= models.CASCADE,
-        related_name= _("vital_Signs"),
-        verbose_name= _("Visit"),
+        # related_name= _("vital_Signs"),
+        verbose_name= _("Prescription"),
     )
     vital_sign= models.ForeignKey(
         VitalSign,
         on_delete= models.CASCADE,
-        related_name= _("Visits"),
+        related_name= _("Prescriptions"),
         verbose_name= _("Vital Sign"),
     )
     value= models.FloatField(
@@ -1333,89 +1352,123 @@ class VisitPatientVitalSign(models.Model):  # المؤشرات الحيويه ل
 
     class Meta:
         unique_together= [
-            ["visit", "vital_sign"],
+            ["prescription", "vital_sign"],
         ]
-        verbose_name= _("Visit Patient Vital Sign")
-        verbose_name_plural= _("Visit Patient Vital Signs")
+        verbose_name= _("Prescription Vital Sign")
+        verbose_name_plural= _("Prescription Vital Signs")
 
 
 
 ########################################################################################################################
 ## Employee Activity
+class Activity(BaseModelName):
+    
+    class Meta:
+        verbose_name= _("Activity")
+        verbose_name_plural= _("Activities")
 
 
-class EmployeeActivity(models.Model):
-    class Activity(models.TextChoices):
-        Print = "Print"
-
-    employee = models.ForeignKey(
+class EmployeeActivity(PolymorphicModel):
+    employee= models.ForeignKey(
        Employee,
-        on_delete=models.CASCADE,
-        verbose_name=_("Employee"),
-        related_name=_("%(app_label)s_%(class)s_Employee"),
+        on_delete= models.CASCADE,
+        verbose_name= _("Employee"),
     )
-    visit = models.ForeignKey(
-        Visit,
-        on_delete=models.CASCADE,
-        verbose_name=_("Visit"),
-        related_name=_("%(app_label)s_%(class)s_Visit"),
-    )
-    activity = models.CharField(
-        max_length=5,
-        choices=Activity.choices,
-        verbose_name=_("Activity"),
+    activity= models.ForeignKey(
+       Activity,
+        on_delete= models.CASCADE,
+        blank= True,
+        null= True,
+        related_name= _("Employee_Activities"),
+        verbose_name= _("Activity"),
     )
     execution_time = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_("Execution Time"),
     )
 
-    def __str__(self):
-        return f"{str(self.employee)}->{str(self.visit)}"
+    class Meta:
+        verbose_name= _("Employee Activity")
+        verbose_name_plural= _("Employee Activities")
 
-    @property
-    def slug(self):
-        return slugify(f"{str(self.employee)}->{str(self.visit)}")
+
+class ReportEmployeeActivity(EmployeeActivity):
+    report= models.ForeignKey(
+       Report,
+        on_delete= models.CASCADE,
+        related_name= _("Employee_Activities"),
+        verbose_name= _("Report"),
+    )
 
     class Meta:
-        unique_together = [["employee", "visit", "activity"]]
-        verbose_name = _("Employee Activity")
-        verbose_name_plural = _("Employee Activitys")
+        verbose_name= _("Report Employee Activity")
+        verbose_name_plural= _("Report Employee Activities")
 
+
+class PrescriptionEmployeeActivity(EmployeeActivity):
+    prescription= models.ForeignKey(
+        Prescription,
+        on_delete= models.CASCADE,
+        related_name= _("%(app_label)s_%(class)s_Visit"),
+        verbose_name= _("Prescription"),
+    )
+
+    class Meta:
+        verbose_name= _("Prescription Employee Activity")
+        verbose_name_plural= _("Prescription Employee Activities")
+
+
+class PhlebotomyEmployeeActivity(EmployeeActivity):
+    phlebotomy= models.ForeignKey(
+        Phlebotomy,
+        on_delete= models.CASCADE,
+        related_name= _("phlebotomists+"),
+        verbose_name= _("Phlebotomy"),
+    )
+
+    class Meta:
+        verbose_name= _("Phlebotomy Employee Activity")
+        verbose_name_plural= _("Phlebotomy Employee Activities")
+
+
+class PaymentEmployeeActivity(EmployeeActivity):
+    phlebotomy= models.ForeignKey(
+        PrescriptionPayment,
+        on_delete= models.CASCADE,
+        related_name= _("phlebotomists"),
+        verbose_name= _("Phlebotomy"),
+    )
+
+    class Meta:
+        verbose_name= _("Payment Employee Activity")
+        verbose_name_plural= _("Payment Employee Activities")
 
 
 #############################################################################
 ## inventory management  ادارة المخزون
 
 class Stock(BaseModel):  # المخزون
-    lab_supply = models.OneToOneField(
+    lab_supply= models.OneToOneField(
         LabSupply,
-        on_delete=models.CASCADE,
-        verbose_name=_("Laboratory Supply"),
+        on_delete= models.CASCADE,
+        verbose_name= _("Laboratory Supply"),
     )
-    # TODO PRODUCT DEATAILS STOCK
-    product_details = models.ManyToManyField(
+    product_details= models.ManyToManyField(
         LineInInvoice,
-        verbose_name=_("Product Details"),
-        related_name="%(app_label)s_%(class)s_Product_Details",
+        related_name= _("Stocks"),
+        verbose_name= _("Product Details"),
     )
-
-    @property
-    def packing(self):
-        return self.lab_supply.default_packing
 
     @property  # inventory  المخزون
     def stock(self):
         return sum(list(map(lambda x: x["count_packing"], self.product_details)))
 
-    class Meta:
-        verbose_name = _("Stock")
-        verbose_name_plural = _("Stocks")
-
     def __str__(self):
-        return str(self.product)
+        return str(self.lab_supply.name)
+    
+    class Meta:
+        verbose_name= _("Stock")
+        verbose_name_plural= _("Stocks")
 
     # def get_absolute_url(self):
     #     return reverse("_detail", kwargs={"pk": self.pk})
-
-######################################################################################################################

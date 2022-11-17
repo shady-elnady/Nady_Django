@@ -12,7 +12,7 @@ from GraphQL.models import (
     FacilityTypes,
 )
 from Location.models import Address, Country
-from Payment.models import Currency, Departed, Payment
+from Payment.models import Currency, Payment
 from Facility.models import Facility
 from Person.models import Employee, Person
 from Unit.models import Unit
@@ -27,7 +27,7 @@ class Brand(BaseModelImage):
         null= True,
         blank= True,
         on_delete= models.CASCADE,
-        related_name= _("Made Brands"),
+        related_name= _("Made Brands+"),
         verbose_name= _("Made In"),
     )
 
@@ -39,9 +39,9 @@ class Brand(BaseModelImage):
 class Category(BaseModelName):
     category = models.ForeignKey(
         "self",
-        limit_choice={"is_main_category": True},
+        limit_choices_to={"is_main_category": True},
         on_delete=models.CASCADE,
-        related_name= _("Sub Categories"),
+        related_name= _("Sub Categories+"),
         verbose_name=_("Category"),
     )
     is_main_category = models.BooleanField(
@@ -53,7 +53,7 @@ class Category(BaseModelName):
         verbose_name_plural= _("Categories")
 
 
-class Product(PolymorphicModel, models.Model):  # Weak Entity
+class Product(PolymorphicModel):  # Weak Entity
     name= models.CharField(
         max_length=100,
         verbose_name=_("Name"),
@@ -66,14 +66,14 @@ class Product(PolymorphicModel, models.Model):  # Weak Entity
     )    
     category = models.ForeignKey(
         Category,
-        limit_choice= {"is_main_category": False},
+        limit_choices_to= {"is_main_category": False},
         on_delete= models.CASCADE,
         related_name= _("Products"),
         verbose_name= _("Category"),
     )    
     packaging_items= models.ManyToManyField(
         Unit,
-        througth= "ProductItem",
+        through= "ProductItem",
         verbose_name= _("Packaging Items"),
     )
     measurment_unit= models.ForeignKey(
@@ -113,7 +113,7 @@ class ProductItem(models.Model):
     )
     unit_packaging = models.ForeignKey(
         Unit,
-        limit_choice= {"measurement": "Package"},
+        limit_choices_to= {"measurement": "Package"},
         on_delete= models.CASCADE,
         verbose_name= _("Unit Packaging"),
     ) # العبوه الرئيسيه
@@ -268,7 +268,15 @@ class Business(PolymorphicModel, models.Model):
         default= False,
         verbose_name= _("is Refund Granted"),
     ) # تم رد الأموال الممنوحة
-    
+    payment = models.ForeignKey(
+        Payment,
+        on_delete=models.CASCADE,
+        blank= True,
+        null= True,
+        related_name= _("Orders"),
+        verbose_name= _("Payment"),
+    )
+
     @property
     def final_price(self):
         total = 0
@@ -281,6 +289,19 @@ class Business(PolymorphicModel, models.Model):
     class Meta:
         verbose_name= _("Business")
         verbose_name_plural= _("Business")
+
+
+class BusinessPayment(Payment):
+    business= models.ForeignKey(
+        Business,
+        on_delete= models.CASCADE,
+        related_name= _("Payments"),
+        verbose_name= _("Business"),
+    )
+    
+    class Meta:
+        verbose_name= _("Business Payment")
+        verbose_name_plural= _("Business Payments")
 
 
 class Invoice(Business):    
@@ -297,20 +318,6 @@ class Invoice(Business):
         related_name= _("Invoices"),
         verbose_name= _("Supplier"),
     )
-    departed = models.ForeignKey(
-        Departed,
-        on_delete=models.CASCADE,
-        blank= True,
-        null= True,
-        related_name= _("Invoices"),
-        verbose_name= _("Departed"),
-    )
-    # invoice_type= models.CharField(
-    #     max_length= 2,
-    #     choices= InvoiceType.choices,
-    #     default= InvoiceType.Revenue,
-    #     verbose_name= _("Invoice Type"),
-    # ) # نوع الفاتوره واردات أو مترجع  
 
     class Meta:
         verbose_name= _("Invoice")
@@ -407,14 +414,14 @@ class Order(Business):
     being_delivered = models.BooleanField(
         default=False,
     )
-    payment = models.ForeignKey(
-        Payment,
-        on_delete=models.CASCADE,
-        blank= True,
-        null= True,
-        related_name= _("Orders"),
-        verbose_name= _("Payment"),
-    )
+    # payment = models.ForeignKey(
+    #     Payment,
+    #     on_delete=models.CASCADE,
+    #     blank= True,
+    #     null= True,
+    #     related_name= _("Orders"),
+    #     verbose_name= _("Payment"),
+    # )
     
     def __str__(self):
         return self.customer.name

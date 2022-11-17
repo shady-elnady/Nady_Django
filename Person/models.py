@@ -71,13 +71,6 @@ class MenstrualCycle(ReferenceLimitingFactor): # مراحل الدوره الش�
         verbose_name_plural = _("Menstrual Cycles")
 
 
-class SamplingTime(ReferenceLimitingFactor): # وقت سحب العينه
-    
-    class Meta:
-        verbose_name = _("Sampling Time")
-        verbose_name_plural = _("Sampling Times")
-
-
 class SamplingEating(ReferenceLimitingFactor): # ارتباط سحب العينه بالاكل    
     
     class Meta:
@@ -135,7 +128,7 @@ class Person(Entity):
         null= True,
         blank= True,
         default= "ar",
-        related_name= -("Persons"),
+        related_name= _("Persons"),
         verbose_name= _("Language"),
     )    
 
@@ -188,12 +181,13 @@ class Kinship(models.Model):
     person = models.ForeignKey(
         Person,
         on_delete= models.CASCADE,
+        related_name= _("kinshipers+"),
         verbose_name= _("Person"),
     )
     kinshiper = models.ForeignKey(
         Person,
         on_delete= models.CASCADE,
-        related_name= _("kinshipers"),
+        # related_name= _("kinshipers"),
         verbose_name= _("Kinshiper"),
     )
     relation = models.CharField(

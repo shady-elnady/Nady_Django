@@ -2,7 +2,7 @@ from django.db import models
 
 
 class QRField(models.Field):
-    def __init__(self, max_length, *args, **kwargs):
+    def __init__(self, max_length=24, *args, **kwargs):
         self.max_length = max_length
         super().__init__(*args, **kwargs)
 

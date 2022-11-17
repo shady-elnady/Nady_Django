@@ -170,6 +170,12 @@ class Genders(models.TextChoices):
 #     Quote= "Q", _("Quote")          # عرض اسعار
 
 
+class PaymentType(models.TextChoices): 
+    Revenue= "R", _("Revenue")      # وارد
+    Expenses= "E", _("Expenses")    # منصرف
+    Bounce= "B", _("Bounce")        # مترجع
+
+
 class FacilityTypes(models.TextChoices):
     Laboratory= "L", _("Laboratory")
     MainLaboratory= "ML", _("Main Laboratory")
@@ -182,17 +188,17 @@ class FacilityTypes(models.TextChoices):
     PrivateClinic= "PC", _("Private Clinic")
     Butcher= "B", _("Butcher")
     Grocery= "G", _("Grocery")
-    Barber= "B", _("Barber")
+    Barber= "Ba", _("Barber")
     Pharmacy= "Ph", _("Pharmacy")
     MedicalFacility= "MF", _("Medical Facility")
     Dispensary_Associations= "DA", _("Dispensary & Associations")
 
 
 class PaymentMethod(models.TextChoices):
-    check= "C", _("Check")
+    check= "Ch", _("Check")
     PayPal= "P", _("PayPal")
     Stripe= "S", _("Stripe")
-    Cach= "S", _("Cach")
+    Cach= "Ca", _("Cach")
 
 
 class Scores(models.TextChoices):

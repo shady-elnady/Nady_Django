@@ -145,7 +145,7 @@ class Street(BaseModelNative):
         verbose_name_plural = _("Streets")
 
 
-class CommunicationWay(models.Model, PolymorphicModel):
+class CommunicationWay(PolymorphicModel):
     owner = models.ForeignKey(
         Entity,
         on_delete= models.CASCADE,

@@ -4,8 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from polymorphic.models import PolymorphicModel
 
-from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod
-from Entity.models import Entity
+from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod, PaymentType
 
 # Create your models here.
 
@@ -40,19 +39,19 @@ class Currency(BaseModelNative):
         verbose_name_plural= _("Currencies")
 
 
-class ExpenseItem(BaseModelName): # بنود المصروفات
+class RecurringExpenses(BaseModelName): # بنود المصروفات الدوريه
 
-    class ExpenseTimeType(models.Choices):
+    class ExpenseTimeCyclies(models.TextChoices):
         Daily= "D", _("Daily")
         Weekly= "W", _("Weekly")
         Monthly= "M", _("Monthly")
         Yearly= "Y", _("Yearly")
         Any= "A", _("Any")
 
-    expense_time_type = models.CharField(
+    expense_time_cyclie = models.CharField(
         max_length= 2,
-        choices= ExpenseTimeType.choices,
-        verbose_name= _("Expense Time Type"),
+        choices= ExpenseTimeCyclies.choices,
+        verbose_name= _("Expense Time Cyclie"),
     )
     amount= models.FloatField(
         null= True,
@@ -68,47 +67,11 @@ class ExpenseItem(BaseModelName): # بنود المصروفات
     )
 
     class Meta:
-        verbose_name= _("Expense Item")
-        verbose_name_plural= _("Expense Items")
+        verbose_name= _("Recurring Expense Item")
+        verbose_name_plural= _("Recurring Expense Items")
 
 
-class Financial(models.Model, PolymorphicModel):
-    customer= models.ForeignKey(
-        Entity,
-        limit_choice= {"has_cach": True},
-        on_delete= models.CASCADE,
-        related_name= _("Financials"),
-        verbose_name= _("Customer"),
-    )
-    currency = models.ForeignKey(
-        Currency,
-        default= settings.DEFAULT_CURRENCY,
-        on_delete= models.CASCADE,
-        related_name= _("Financials"),
-        verbose_name= _("Currency"),
-    )
-    amount = models.FloatField(
-        verbose_name= _("Amount"),
-    )
-    created_date= models.DateTimeField(
-        auto_now_add=True,
-        editable=False,
-        verbose_name=_("Created Date"),
-    )
-    
-    # @property
-    # def final_payments(self):
-    #     total = 0
-    #     for payment in self.payments.all():
-    #         total += payment.amount
-    #     return total
-    
-    class Meta:
-        verbose_name= _("Financial")
-        verbose_name_plural= _("Financials")
-
-
-class Payment(Financial):
+class Payment(PolymorphicModel):
     payment_method= models.CharField(
         max_length= 2,
         choices= PaymentMethod.choices,
@@ -119,17 +82,30 @@ class Payment(Financial):
         unique= True,
         verbose_name= _("Charge ID"),
     )
+    currency = models.ForeignKey(
+        Currency,
+        default= settings.DEFAULT_CURRENCY,
+        on_delete= models.CASCADE,
+        # related_name= _("Payments"),
+        verbose_name= _("Currency"),
+    )
+    amount = models.FloatField(
+        verbose_name= _("Amount"),
+    )
+    payment_type= models.CharField(
+        max_length= 2,
+        choices= PaymentType.choices,
+        verbose_name= _("Payment Type"),
+    )
+    payment_date= models.DateTimeField(
+        auto_now_add= True,
+        editable= False,
+        verbose_name= _("Payment Date"),
+    )
     
     class Meta:
         verbose_name= _("Payment")
         verbose_name_plural= _("Payments")
-
-
-class Departed(Financial): # منصرف
-
-    class Meta:
-        verbose_name= _("Departed")
-        verbose_name_plural= _("Departeds")
 
 
 
@@ -159,3 +135,51 @@ class Departed(Financial): # منصرف
 
 ##  https://openexchangerates.org/account/app-ids
 # api ID = 82775e187c684ecaa9efc98e7f0e9381
+
+
+
+###########################################################################
+
+# class Financial(models.Model, PolymorphicModel):
+#     customer= models.ForeignKey(
+#         Entity,
+#         limit_choice= {"has_cach": True},
+#         on_delete= models.CASCADE,
+#         related_name= _("Financials"),
+#         verbose_name= _("Customer"),
+#     )
+#     currency = models.ForeignKey(
+#         Currency,
+#         default= settings.DEFAULT_CURRENCY,
+#         on_delete= models.CASCADE,
+#         related_name= _("Financials"),
+#         verbose_name= _("Currency"),
+#     )
+#     amount = models.FloatField(
+#         verbose_name= _("Amount"),
+#     )
+#     created_date= models.DateTimeField(
+#         auto_now_add=True,
+#         editable=False,
+#         verbose_name=_("Created Date"),
+#     )
+    
+#     # @property
+#     # def final_payments(self):
+#     #     total = 0
+#     #     for payment in self.payments.all():
+#     #         total += payment.amount
+#     #     return total
+    
+#     class Meta:
+#         verbose_name= _("Financial")
+#         verbose_name_plural= _("Financials")
+
+
+# class Departed(Financial): # منصرف
+
+#     class Meta:
+#         verbose_name= _("Departed")
+#         verbose_name_plural= _("Departeds")
+
+

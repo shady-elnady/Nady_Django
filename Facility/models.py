@@ -51,7 +51,7 @@ class Shift(PolymorphicModel, BaseModel):  # شفتات ايام الاسبوع
         return self.leaving_time - self.attending_time
 
     class Meta:
-        unique_together = [["week_day", "shift"]]
+        unique_together = [["week_day", "day_part"]]
         verbose_name = _("Shift")
         verbose_name_plural = _("Shifts")
 

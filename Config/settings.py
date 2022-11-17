@@ -61,9 +61,9 @@ INSTALLED_APPS = [
     "GraphQL",
     "Entity",
     "Unit",
+    "Payment",  # ماليات
     "Language",
     "Utils",
-    "Payment",  # ماليات
     "Location",
     "Facility",  # منشآت
     "Person",

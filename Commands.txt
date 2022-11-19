@@ -49,6 +49,9 @@ pip install django-polymorphic-tree
 pip install django-spaghetti-and-meatballs
     django-spaghetti-and-meatballs-0.4.2
 
+pip install django-notifications-hq
+
+
 pip install django-import-export
     defusedxml-0.7.1
     diff-match-patch-20200713

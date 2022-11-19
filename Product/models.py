@@ -10,6 +10,7 @@ from GraphQL.models import (
     BaseModelImageOnly,
     BaseModelName,
     FacilityTypes,
+    Measurements,
 )
 from Location.models import Address, Country
 from Payment.models import Currency, Payment
@@ -22,7 +23,7 @@ from Unit.models import Unit
 
 
 class Brand(BaseModelImage):
-    made_in = models.ForeignKey(
+    made_in= models.ForeignKey(
         Country,
         null= True,
         blank= True,
@@ -32,20 +33,19 @@ class Brand(BaseModelImage):
     )
 
     class Meta:
-        verbose_name = _("Brand")
-        verbose_name_plural = _("Brands")
+        verbose_name= _("Brand")
+        verbose_name_plural= _("Brands")
 
 
 class Category(BaseModelName):
-    category = models.ForeignKey(
+    category_parent= models.ForeignKey(
         "self",
-        limit_choices_to={"is_main_category": True},
-        on_delete=models.CASCADE,
+        null= True,
+        blank= True,
+        limit_choices_to= {"category_parent__isnull": True},
+        on_delete= models.CASCADE,
         related_name= _("Sub Categories+"),
-        verbose_name=_("Category"),
-    )
-    is_main_category = models.BooleanField(
-        verbose_name=_("is Main Category"),
+        verbose_name= _("Category Parent"),
     )
 
     class Meta:
@@ -58,23 +58,23 @@ class Product(PolymorphicModel):  # Weak Entity
         max_length=100,
         verbose_name=_("Name"),
     )
-    brand = models.ForeignKey(
+    brand= models.ForeignKey(
         Brand,
         on_delete= models.CASCADE,
         related_name= _("Products"),
         verbose_name= _("Brand"),
     )    
-    category = models.ForeignKey(
+    category= models.ForeignKey(
         Category,
-        limit_choices_to= {"is_main_category": False},
+        limit_choices_to= {"category_parent__isnull": False},
         on_delete= models.CASCADE,
         related_name= _("Products"),
         verbose_name= _("Category"),
     )    
-    packaging_items= models.ManyToManyField(
+    product_packaging_items= models.ManyToManyField(
         Unit,
-        through= "ProductItem",
-        verbose_name= _("Packaging Items"),
+        through= "ProductPackaging",
+        verbose_name= _("Product Packaging Items"),
     )
     measurment_unit= models.ForeignKey(
         Unit,
@@ -105,15 +105,15 @@ class Product(PolymorphicModel):  # Weak Entity
         verbose_name_plural = _("Products")
 
 
-class ProductItem(models.Model):
-    item = models.ForeignKey(
+class ProductPackaging(models.Model):
+    product_item= models.ForeignKey(
         Product,
         on_delete= models.CASCADE,
         verbose_name= _("Product Item"),
     )
     unit_packaging = models.ForeignKey(
         Unit,
-        limit_choices_to= {"measurement": "Package"},
+        limit_choices_to= {"measurement__equal": Measurements.Package},
         on_delete= models.CASCADE,
         verbose_name= _("Unit Packaging"),
     ) # العبوه الرئيسيه
@@ -125,7 +125,7 @@ class ProductItem(models.Model):
         unique= True,
         verbose_name= _("Serial No."),
     )
-    currency = models.ForeignKey(
+    currency= models.ForeignKey(
         Currency,
         default= settings.DEFAULT_CURRENCY,
         on_delete= models.CASCADE,
@@ -149,7 +149,7 @@ class ProductItem(models.Model):
 
     @property
     def name(self) -> str:
-        return f"{self.item.name}-{self.volume}-{self.unit_packaging.name}"
+        return f"{self.product_item.name}-{self.volume}-{self.unit_packaging.name}"
     
     @property
     def unit_packaging_price(self) -> float:
@@ -170,17 +170,17 @@ class ProductItem(models.Model):
 
     class Meta:
         unique_together = (
-            "item",
+            "product_item",
             "unit_packaging",
             "volume",
         )
-        verbose_name= _("Product Item")
-        verbose_name_plural= _("Product Items")
+        verbose_name= _("ProductPackaging")
+        verbose_name_plural= _("ProductPackaging")
 
 
 class ProductItemImage(BaseModelImageOnly):
     product_item = models.ForeignKey(
-        ProductItem,
+        ProductPackaging,
         on_delete= models.CASCADE,
         related_name= _("Images"),
         verbose_name= _("Product Item"),
@@ -235,7 +235,7 @@ class Business(PolymorphicModel, models.Model):
         verbose_name= _("Serial Number"),
     )
     products_items = models.ManyToManyField(
-        ProductItem,
+        ProductPackaging,
         through= "LineInInvoice",
         verbose_name= _("Products Items"),
     )
@@ -332,7 +332,7 @@ class LineInInvoice(models.Model):  #  Many to Many RealtionShip Product + Invoi
         verbose_name= _("Invoice"),
     )
     product_item= models.ForeignKey(
-        ProductItem,
+        ProductPackaging,
         on_delete= models.CASCADE,
         related_name= _("Lines_In_Invoices"),
         verbose_name= _("Product Item"),

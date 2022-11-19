@@ -170,10 +170,10 @@ class Genders(models.TextChoices):
 #     Quote= "Q", _("Quote")          # عرض اسعار
 
 
-class PaymentType(models.TextChoices): 
-    Revenue= "R", _("Revenue")      # وارد
-    Expenses= "E", _("Expenses")    # منصرف
-    Bounce= "B", _("Bounce")        # مترجع
+# class PaymentType(models.TextChoices): 
+#     Revenue= "R", _("Revenue")      # وارد
+#     Expenses= "E", _("Expenses")    # منصرف
+#     Bounce= "B", _("Bounce")        # مترجع
 
 
 class FacilityTypes(models.TextChoices):
@@ -234,3 +234,45 @@ class Runs(models.TextChoices):
     Wednesday= "Wed", _(calendar.day_name[4])
     Thursday= "Thu", _(calendar.day_name[5])
     Friday= "Fri", _(calendar.day_name[6])
+
+
+class Measurements(models.TextChoices):
+        Package = "P", _("Package")
+        Volume = "V", _("Volume")
+        Area = "A", _("Area")
+        Length = "L", _("Length")
+        Mass = "M", _("Mass")
+        Concentation = "C", _("Concentation")
+        Speed = "S", _("Speed")
+        Time = "T", _("Time")
+        Direction = "D", _("Direction")
+        Temperature = "Te", _("Temperature")
+        ElectricCurrent = "EC", _("Electric Current")
+        LuminousIntensity = "LI", _("Luminous Intensity")
+
+
+# class UnitPrefixes(models.TextChoices):
+#         Tera= "T", _("tera"), 1000000000000
+#         Giga= "G", _("giga"), 1000000000
+#         Mega= "M", _("mega"), 1000000
+#         Kilo= "k", _("kilo"), 1000
+#         Hecto= "h", _("hecto"), 100
+#         Deca= "da", _("deca"), 10
+#         none= "", _(""), 1
+#         Deci= "d", _("deci"), 0.1
+#         Centi= "c", _("centi"), 0.01
+#         Milli= "m", _("milli"), 0.001
+#         Micro= "μ", _("micro"), 0.000001
+#         Nano= "n", _("nano"), 0.000000001
+#         Pico= "p", _("pico"), 0.000000000001
+
+
+# class BinaryPrefixes(models.TextChoices):
+#         Yobi= "Yi", _("yobi"), 2^80
+#         Zebi= "Zi", _("yobi"), 2^70
+#         Exbi= "Ei", _("giga"), 2^60
+#         Pebi= "Pi", _("pebi"), 2^50
+#         Tebi= "Ti", _("tebi"), 2^40
+#         Gibi= "Gi", _("gibi"), 2^30
+#         Mebi= "Mi", _("mebi"), 2^20
+#         Kibi= "Ki", _("kibi"), 2^10

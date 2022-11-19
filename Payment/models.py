@@ -3,8 +3,10 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from polymorphic.models import PolymorphicModel
-
-from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod, PaymentType
+from djmoney.models.fields import MoneyField
+from djmoney.money import Money
+from djmoney.models.validators import MaxMoneyValidator,MinMoneyValidator
+from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod
 
 # Create your models here.
 
@@ -39,26 +41,59 @@ class Currency(BaseModelNative):
         verbose_name_plural= _("Currencies")
 
 
-class RecurringExpenses(BaseModelName): # بنود المصروفات الدوريه
+class FinancialItem(BaseModelName): # بنود ماليه 
 
-    class ExpenseTimeCyclies(models.TextChoices):
+    class FinancialItemTypes(models.TextChoices):
+        RevenueItem= "R", _("Revenue Item")
+        ExpenseItem= "E", _("Expense Item")
+
+    item_type= models.CharField(
+        max_length= 1,
+        choices= FinancialItemTypes.choices,
+        verbose_name= _("Financial Item Type"),
+    )
+
+    class Meta:
+        verbose_name= _("Financial Item")
+        verbose_name_plural= _("Financial Items")
+
+
+class PeriodicFinancialItem(models.Model): # البنود الماليه الدوريه
+    
+    class FinancialPeriodicTimes(models.TextChoices):
         Daily= "D", _("Daily")
         Weekly= "W", _("Weekly")
         Monthly= "M", _("Monthly")
         Yearly= "Y", _("Yearly")
         Any= "A", _("Any")
-
-    expense_time_cyclie = models.CharField(
+    
+    item= models.ForeignKey(
+        FinancialItem,
+        on_delete= models.CASCADE,
+        # related_name= _("Financials"),
+        verbose_name= _("Financial Item"),
+    )
+    periodic_time = models.CharField(
         max_length= 2,
-        choices= ExpenseTimeCyclies.choices,
-        verbose_name= _("Expense Time Cyclie"),
+        choices= FinancialPeriodicTimes.choices,
+        verbose_name= _("Periodic Time"),
     )
-    amount= models.FloatField(
-        null= True,
-        blank= True,
-        verbose_name= _("Amount"),
+    amount= MoneyField(
+        max_digits=settings.CURRENCY_MAX_DIGITS,
+        decimal_places=settings.CURRENCY_DECIMAL_PLACES,
+        default_currency=settings.BASE_CURRENCY,
+        null=True,
+        blank=True,
+        validators=[
+            MinMoneyValidator(10),
+            MaxMoneyValidator(1500),
+            MinMoneyValidator(Money(500,'NOK')),
+            MaxMoneyValidator(Money(900,'NOK')),
+            MinMoneyValidator({'EUR':100,'USD':50}),
+            MaxMoneyValidator({'EUR':1000,'USD':500}),
+        ]
     )
-    currency = models.ForeignKey(
+    currency= models.ForeignKey(
         Currency,
         default= settings.DEFAULT_CURRENCY,
         on_delete= models.CASCADE,
@@ -67,46 +102,64 @@ class RecurringExpenses(BaseModelName): # بنود المصروفات الدور
     )
 
     class Meta:
-        verbose_name= _("Recurring Expense Item")
-        verbose_name_plural= _("Recurring Expense Items")
+        verbose_name= _("Periodic Financial Item")
+        verbose_name_plural= _("Periodic Financial Items")
 
 
 class Payment(PolymorphicModel):
+    financial_item= models.ForeignKey(
+        FinancialItem,
+        null= True,
+        blank= True,
+        on_delete= models.CASCADE,
+        related_name= _("Payments"),
+        verbose_name= _("FinancialItem"),
+    )
     payment_method= models.CharField(
         max_length= 2,
         choices= PaymentMethod.choices,
         verbose_name= _("Payment Method"),
     )
-    charge_id = models.CharField(
+    charge_id= models.CharField(
         max_length=50,
         unique= True,
         verbose_name= _("Charge ID"),
     )
-    currency = models.ForeignKey(
+    currency= models.ForeignKey(
         Currency,
         default= settings.DEFAULT_CURRENCY,
         on_delete= models.CASCADE,
-        # related_name= _("Payments"),
+        related_name= _("Payments"),
         verbose_name= _("Currency"),
     )
-    amount = models.FloatField(
+    amount= models.FloatField(
         verbose_name= _("Amount"),
     )
-    payment_type= models.CharField(
-        max_length= 2,
-        choices= PaymentType.choices,
-        verbose_name= _("Payment Type"),
-    )
-    payment_date= models.DateTimeField(
+    payment_time= models.DateTimeField(
         auto_now_add= True,
         editable= False,
-        verbose_name= _("Payment Date"),
+        verbose_name= _("Payment Time"),
     )
     
     class Meta:
         verbose_name= _("Payment")
         verbose_name_plural= _("Payments")
 
+
+class PeriodicPayment(Payment):
+    periodic_financial_item= models.ForeignKey(
+        PeriodicFinancialItem,
+        on_delete= models.CASCADE,
+        related_name= _("Payments"),
+        verbose_name= _("Periodic Financial Item"),
+    )
+
+    # def save(self, *args, **kwargs):
+    #     super(PeriodicPayment, self).save(*args, **kwargs)
+    
+    class Meta:
+        verbose_name= _("Periodic Item")
+        verbose_name_plural= _("Periodic Items")
 
 
 # TODO PAYMENT

@@ -10,12 +10,12 @@ from GraphQL.models import BaseModel, BaseModelImage
 
 class Entity(PolymorphicModel, BaseModelImage, BaseModel):
 
-    public_communication_ways = models.ManyToManyField(
+    public_communication_ways= models.ManyToManyField(
         "Location.CommunicationWay",
         related_name= _("Public_Communication_Way"),
         verbose_name= _("Public Communication Ways"),
     )  # طرق الاتصال
 
     class Meta:
-        verbose_name = _("Entity")
-        verbose_name_plural = _("Entities")
+        verbose_name= _("Entity")
+        verbose_name_plural= _("Entities")

@@ -35,3 +35,9 @@ class Following(BaseModel):
         )
 
     objects = FollowingManager()
+
+
+"""
+    https://stackoverflow.com/questions/34936509/django-custom-user-model-with-django-polymorphic
+    
+"""

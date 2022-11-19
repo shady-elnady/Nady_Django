@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 from decouple import config
 import calendar
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     ## Libraries
     'graphene_django',
     'debug_toolbar',
@@ -57,6 +60,10 @@ INSTALLED_APPS = [
     'polymorphic_tree',
     'polymorphic',
     'mptt',
+    'django_spaghetti',
+    'import_export',
+    'djmoney',
+
     ## My Apps
     "GraphQL",
     "Entity",
@@ -153,6 +160,30 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+LANGUAGES = [
+    ("ar", _("Arabic")),
+    ("en", _("English")),
+    ("fr", _("french")),
+]
+
+
+# True for right-to-left languages like Arabic, and to False otherwise
+# LANGUAGE_BIDI = False
+# Languages using BiDi (right-to-left) layout
+LANGUAGES_BIDI = [
+    "ar",
+    # "he", "ar-dz", "fa", "ur"
+]
+
+# LOCALE_PATHS = (BASE_DIR / "locale/",)
+LOCALE_PATHS = [
+    BASE_DIR / "Locales/",
+    # '/home/www/project/common_files/locale',
+    # '/var/local/translations/locale',
+]
+
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -168,7 +199,7 @@ if DEBUG:
         BASE_DIR / "static",
         # "/var/www/example.com/static/",
     ]
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    STATIC_ROOT = BASE_DIR / 'staticFiles'
 else:
     STATIC_ROOT = BASE_DIR / "static"
 
@@ -208,3 +239,56 @@ GRAPHQL_JWT = {
 ## Money
 
 DEFAULT_CURRENCY= 'EGP'
+
+CURRENCY_MAX_DIGITS= 10
+
+CURRENCY_DECIMAL_PLACES= 2
+
+BASE_CURRENCY= "USD"
+
+##
+
+SPAGHETTI_SAUCE = {
+    'apps': [
+        'auth',
+        "GraphQL",
+        "Entity",
+        "Unit",
+        "Payment",  # ماليات
+        "Language",
+        "Utils",
+        "Location",
+        "Facility",  # منشآت
+        "Person",
+        "Product",
+        "Laboratory",
+        "Report",
+        "Doctor",
+        "User",
+        "Article",
+        "Tool",
+    ],
+    'show_fields': True,
+    'exclude': {
+        'auth': ['user'],
+    },
+}
+
+###
+## add New Currency
+import moneyed
+BOB= moneyed.add_currency( 
+    code='BOB',
+    numeric='068',
+    name='Pesoboliviano',
+    countries=('BOLIVIA',),
+)
+
+
+
+###
+LOGIN_URL = reverse_lazy('login')
+
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+
+LOGOUT_REDIRECT_URL = reverse_lazy('login')

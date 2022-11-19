@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth import authenticate, login as auth_login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.conf import settings
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
@@ -9,7 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse
 
 from .models import User
-from .forms import RegistrationForm
+from .forms import RegistrationForm, SignUpForm
 
 
 # Create your views here.
@@ -56,3 +57,24 @@ class Signup(SuccessMessageMixin, CreateView):
     model = User
     template_name = 'registration/signup.html'
     # success_url = reverse_lazy('glazes:home page')
+
+
+def signUp(req):
+    if req.method == "POST":
+        form = SignUpForm(req.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password1"]
+            user = authenticate(username=username, password=password)
+            auth_login(req, user)
+            return redirect(settings.LOGIN_REDIRECT_URL)
+
+    else:
+        form = SignUpForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(req, "registration/signUp.html", context=context)

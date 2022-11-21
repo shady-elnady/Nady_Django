@@ -1,168 +1,174 @@
-(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
+  $.fn.slider = function () {
+    return this.each(function (options) {
+      var that = $(this);
 
-    $.fn.slider = function() {
+      var defaults = {
+        start_timeout: 1500,
+        slide_animation: 3000,
+        speed_of_effects: 1.3,
+        delay_of_effects: 0.2,
+      };
 
-        return this.each(function(options) {
+      var options = $.extend(defaults, options);
 
-            var that = $(this);
+      var obj = {
+        slides: $(that).find("li"),
+        start: false,
+        clips_number: 8,
+        first_slide: function () {
+          return this.slides.eq(0);
+        },
+        start_clip_slide: function () {
+          return this.slides.eq(1);
+        },
+        loop: function loop(next_slide) {
+          for (var i = 0; i < obj.clips_number; i++) {
+            if (obj.start == false) {
+              obj.start_clip_slide().css({
+                zIndex: 1,
+                display: "block",
+              });
+            }
 
-            var defaults = {
-                start_timeout: 1500,
-                slide_animation : 3000,
-                speed_of_effects : 1.3,
-                delay_of_effects : 0.2
-            };
+            var canvas_element = $("<canvas>")
+              .attr({
+                id: "canvasID_" + (i + 1),
+                class: "canvasClass",
+              })
+              .attr({
+                width: 100,
+                height: 500,
+              })
+              .css("left", 100 * i);
 
-            var options = $.extend(defaults, options);
+            if (obj.start == false) {
+              canvas_element.appendTo(obj.start_clip_slide());
+            } else {
+              canvas_element.appendTo(next_slide);
+            }
 
-            var obj = {
-                slides : $(that).find('li'),
-                start : false,
-                clips_number : 8,
-                first_slide : function() {
-                    return this.slides.eq(0);
-                },
-                start_clip_slide : function() {
-                    return this.slides.eq(1);
-                },
-                loop : function loop(next_slide) {
+            var canvas = $("#canvasID_" + (i + 1))[0];
 
-                        for (var i = 0; i < obj.clips_number; i++) {
+            var ctx = canvas.getContext("2d");
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
 
-                            if(obj.start == false) {
-                                obj.start_clip_slide().css({
-                                    'zIndex': 1,
-                                    'display': 'block'
-                                });
-                            }
+            var img = document.createElement("img");
 
-                            var canvas_element = $('<canvas>').attr({
-                                id: 'canvasID_' + ( i + 1 ),
-                                class: 'canvasClass'
-                            }).attr({
-                                width: 100,
-                                height: 500
-                            }).css('left', 100 * i);
+            if (obj.start == false) {
+              img_src = obj.start_clip_slide().find("img").attr("src");
+            } else {
+              img_src = next_slide.find("img").attr("src");
+            }
 
-                            if(obj.start == false) {
-                                canvas_element.appendTo(obj.start_clip_slide());
-                            } else {
-                                canvas_element.appendTo(next_slide);
-                            }
+            img.src = img_src;
 
-                            var canvas = $('#canvasID_' + (i + 1))[0];
+            ctx.drawImage(img, 100 * i, 0, 100, 500, 0, 0, 100, 500);
+          }
+        },
+        animation: function animation() {
+          if (obj.start == false) {
+            obj.loop();
+          }
+          obj.start = true;
 
-                            var ctx = canvas.getContext('2d');
-                            ctx.mozImageSmoothingEnabled = false;
-                            ctx.webkitImageSmoothingEnabled = false;
-                            ctx.msImageSmoothingEnabled = false;
-                            ctx.imageSmoothingEnabled = false;
+          var tl = new TimelineMax();
 
-                            var img = document.createElement('img');
+          tl.add(TweenMax.set(".canvasClass", { top: -500 }));
+          tl.add(
+            TweenMax.staggerTo(
+              ".canvasClass",
+              options.speed_of_effects,
+              { top: 0 },
+              options.delay_of_effects,
+              myCompleteAll
+            )
+          );
 
-                            if(obj.start == false) {
-                                img_src = obj.start_clip_slide().find('img').attr('src');
-                            } else {
-                                img_src = next_slide.find('img').attr('src');
-                            }
+          function myCompleteAll() {
+            setTimeout(obj.all_done, options.slide_animation);
+          }
+        },
+        change_slide: function change_slide(next_slide) {
+          $("canvas").remove();
 
-                            img.src = img_src;
+          var next_slide = next_slide;
 
-                            ctx.drawImage(img, 100 * i, 0, 100, 500, 0, 0, 100, 500);
+          obj.loop(next_slide);
 
-                        }
+          obj.animation();
+        },
+        all_done: function all_done() {
+          obj.slides.css({
+            zIndex: 1,
+            display: "block",
+          });
 
-                },
-                animation :  function animation() {
+          var current_slide = $(that).find("li.active");
 
-                    if(obj.start == false) {
-                        obj.loop();
-                    }
-                    obj.start = true;
+          if (current_slide.length == 0) {
+            current_slide = obj.start_clip_slide();
+          }
 
-                    var tl = new TimelineMax();
+          current_slide
+            .css({
+              zIndex: 2,
+              display: "block",
+            })
+            .find("img")
+            .css("visibility", "visible");
 
-                    tl.add( TweenMax.set('.canvasClass', {top: -500}) );
-                    tl.add( TweenMax.staggerTo(".canvasClass", options.speed_of_effects, {top: 0}, options.delay_of_effects, myCompleteAll ) );
+          var next_slide = current_slide.next();
 
-                    function myCompleteAll() {
-                        setTimeout(obj.all_done, options.slide_animation);
-                    }
+          if (next_slide.length == 0) {
+            current_slide
+              .css({
+                zIndex: 2,
+                display: "block",
+              })
+              .find("img")
+              .css("visibility", "visible");
 
-                },
-                change_slide : function change_slide(next_slide) {
+            next_slide = obj.first_slide();
+          }
 
-                    $('canvas').remove();
+          obj.slides.removeClass("active");
+          next_slide.addClass("active");
 
-                    var next_slide = next_slide;
+          next_slide
+            .css({
+              zIndex: 3,
+              display: "block",
+            })
+            .find("img")
+            .css("visibility", "hidden");
 
-                    obj.loop(next_slide);
+          obj.change_slide(next_slide);
+        },
+        init: function () {
+          obj
+            .first_slide()
+            .css({
+              zIndex: 1,
+              display: "block",
+            })
+            .find("img")
+            .css("visibility", "visible");
 
-                    obj.animation();
+          obj.start_clip_slide().find("img").css("visibility", "hidden");
 
-                },
-                all_done : function all_done() {
+          setTimeout(obj.animation, defaults.start_timeout);
+        },
+      };
 
-                    obj.slides.css({
-                        'zIndex': 1,
-                        'display': 'block'
-                    });
-
-                    var current_slide = $(that).find('li.active');
-
-                    if (current_slide.length == 0) {
-                        current_slide = obj.start_clip_slide();
-                    }
-
-                    current_slide.css({
-                        'zIndex': 2,
-                        'display': 'block'
-                    }).find('img').css('visibility','visible');
-
-                    var next_slide = current_slide.next();
-
-                    if (next_slide.length == 0) {
-
-                        current_slide.css({
-                            'zIndex': 2,
-                            'display': 'block'
-                        }).find('img').css('visibility','visible');
-
-                        next_slide = obj.first_slide();
-                    }
-
-                    obj.slides.removeClass('active');
-                    next_slide.addClass('active');
-
-                    next_slide.css({
-                        'zIndex': 3,
-                        'display': 'block'
-                    }).find('img').css('visibility','hidden');
-
-                    obj.change_slide(next_slide);
-
-                },
-                init : function () {
-
-                    obj.first_slide().css({
-                        'zIndex': 1,
-                        'display': 'block'
-                    }).find('img').css('visibility','visible');
-
-                    obj.start_clip_slide().find('img').css('visibility','hidden');
-
-                    setTimeout(obj.animation, defaults.start_timeout);
-                }
-            };
-
-            obj.init();
-
-        });
-
-    };
-
-    $(document).ready(function() {
-        $('#banner').slider();
+      obj.init();
     });
+  };
 
+  $(document).ready(function () {
+    $("#banner").slider();
+  });
 })(jQuery, window, document);

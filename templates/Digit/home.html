@@ -1,0 +1,29 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block meta %}
+  <meta http-equiv="refresh" content="10.4; url={% url 'Digit:canvas' %}">
+  <style>
+    #myVideo {
+      position: absolute;
+      left: 0;
+      top: 0;
+      min-width: 100%; 
+      min-height: 100%;
+      z-index: 10000;
+    }
+  </style>
+{% endblock meta %}
+  
+{% block title %}
+  Home Page 
+{% endblock title %}
+
+
+{% block body %}
+<video controls id="myVideo" autoplay>
+  <source src="{% static 'videos/welcome.mov' %}" type="video/webm" />
+  <source src="{% static 'videos/welcome.mov' %}" type="video/mp4" />
+  Sorry, your browser doesn't support embedded videos.
+</video>
+{% endblock body %}

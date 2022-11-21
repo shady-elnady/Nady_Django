@@ -112,6 +112,21 @@ pip install graphene-django-extras
     pip install python-dateutil  #  Date directive depends on dateutil module
 
 
+## Machin Learning
+pip install numpy
+pip install keras
+pip install opencv-python
+tensorflow install :
+    1- CUDA Toolkit 11.7
+    2- cuDNN    https://developer.nvidia.com/rdp/cudnn-archive
+        Install cuDNN.
+        Download cuDNN v7.6.4 for CUDA 10.1. This will require you to sign up to the NVIDIA Developer Program.
+        Unzip to a suitable location and add the bin directory to your PATH.
+    3- pip install tensorflow
+    4 -pip install tf-nightly-gpu
+
+
+
 ## Math Helper:
     pip install sympy
         https://docs.sympy.org/latest/index.html

@@ -1,0 +1,147 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %} Classify Digit {% endblock title %}
+
+
+{% block myStyle %}
+  <link rel="stylesheet" href="{% static 'Digit/css/canvas.css' %}" />
+{% endblock myStyle %}
+  
+
+{% block body %}
+
+
+<div class="container text-center m-auto colored">
+  <h1 class="mt-3">Classify Digit</h1>
+  <div id="drawer_container">
+    <div id="sidebar">
+      <div class="colorButtons">
+        <h4>Color</h4>
+        <input
+          type="color"
+          id="colorpicker"
+          value="#ffffff"
+          class="colorpicker"
+        />
+      </div>
+      <div class="colorButtons">
+        <h4>Bg Color</h4>
+        <input
+          type="color"
+          value="#000000"
+          id="bgcolorpicker"
+          class="colorpicker"
+        />
+      </div>
+
+      <div class="toolsButtons">
+        <h4>Tools</h4>
+        <button id="eraser" class="btn btn-default">
+          <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+        </button>
+        <button id="clear" class="btn btn-danger">
+          <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="buttonSize">
+        <h4>Size (<span id="showSize">60</span>)</h4>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value="60"
+          step="1"
+          id="controlSize"
+        />
+      </div>
+
+      <div class="canvasSize">
+        <h4>Canvas</h4>
+        <div class="input-group">
+          <span class="input-group-addon">X</span>
+          <input
+            type="number"
+            id="sizeX"
+            class="form-control"
+            placeholder="sizeX"
+            value="800"
+            class="size"
+          />
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Y</span>
+          <input
+            type="number"
+            id="sizeY"
+            class="form-control"
+            placeholder="sizeY"
+            value="800"
+            class="size"
+          />
+        </div>
+        <input
+          type="button"
+          class="updateSize btn btn-success"
+          value="Update"
+          id="canvasUpdate"
+        />
+      </div>
+      <div class="Storage">
+        <h4>Storage</h4>
+        <input type="button" value="Save" class="btn btn-warning" id="save" />
+        <input type="button" value="Load" class="btn btn-warning" id="load" />
+        <input
+          type="button"
+          value="Clear"
+          class="btn btn-warning"
+          id="clearCache"
+        />
+      </div>
+      <div class="extra">
+        <h4>Extra</h4>
+        <a id="saveToImage" class="btn btn-warning">Download</a>
+        <h4>Neural NetWork :</h4>
+        <form method="POST" id="form1" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" id="captured_image" name="captured_image" />
+          <input
+            id="classify_image"
+            type="submit"
+            onclick="send_image()"
+            value="Classify Digit"
+            class="btn btn-primary py-3 text-lg-center"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% if result %}
+  <div class="outDialog">
+    <dialog open class="text-center">
+      <div style="background-color: rgb(223, 221, 113);">
+        <h2 class="text-primary">Result</h2>
+      </div>
+      <div class="text-success" style="font-size: 6em;">{{result}}</div>
+      <div class="w-100">
+        <a href="{% url 'Digit:canvas' %}" class="btn btn-success w-50">GO</a>
+      </div>
+    </dialog>
+  </div>
+{% endif %}
+  
+
+
+
+
+{% endblock body %}
+
+
+{% block javaScript %}
+  <script src="{% static 'Digit/js/canvas.js' %}"></script>
+{% endblock javaScript %}
+  

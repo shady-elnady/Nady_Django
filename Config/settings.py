@@ -19,6 +19,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 calendar.setfirstweekday(calendar.SATURDAY)
@@ -63,6 +66,7 @@ INSTALLED_APPS = [
     'django_spaghetti',
     'import_export',
     'djmoney',
+    'djmoney.contrib.exchange',
 
     ## My Apps
     "GraphQL",
@@ -256,7 +260,6 @@ SPAGHETTI_SAUCE = {
         "Unit",
         "Payment",  # ماليات
         "Language",
-        "Utils",
         "Location",
         "Facility",  # منشآت
         "Person",
@@ -266,7 +269,11 @@ SPAGHETTI_SAUCE = {
         "Doctor",
         "User",
         "Article",
+        "Account",
+        "Service",
         "Tool",
+        # "Digit",
+        "Utils",
     ],
     'show_fields': True,
     'exclude': {
@@ -277,6 +284,15 @@ SPAGHETTI_SAUCE = {
 ###
 ## add New Currency
 import moneyed
+
+CURRENCIES = (
+    'USD',
+    'EUR',
+)
+CURRENCY_CHOICES = [
+    ('USD', 'USD $'),
+    ('EUR', 'EUR €'),
+]
 BOB= moneyed.add_currency( 
     code='BOB',
     numeric='068',
@@ -288,7 +304,5 @@ BOB= moneyed.add_currency(
 
 ###
 LOGIN_URL = reverse_lazy('login')
-
 LOGIN_REDIRECT_URL = reverse_lazy('home')
-
 LOGOUT_REDIRECT_URL = reverse_lazy('login')

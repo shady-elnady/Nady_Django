@@ -1,6 +1,5 @@
-{% load static %} {% load i18n %} {% load currency %}
+{% load static %}
 
-{# Load the tag library #} {% load bootstrap5 %} {# Load CSS and JavaScript #} {% bootstrap_css %} {% bootstrap_javascript %} {# Display django.contrib.messages as Bootstrap alerts #} {% bootstrap_messages %}
 <!DOCTYPE html>
 <html lang="en">
 <!-- Basic -->
@@ -39,7 +38,7 @@
     <![endif]-->
 </head>
 
-<body id="home" data-spy="scroll" data-target="#navbar-wd" data-offset="98">
+<body id="home"  data-target="#navbar-wd" data-offset="98">
     <!-- LOADER -->
     <div id="preloader">
         <div class="loader">
@@ -52,7 +51,7 @@
     <header class="top-header">
         <nav class="navbar header-nav navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'Nady_System:home' %}"><img src="{% static 'images/logo.png' %}" alt="image" /></a>
+                <a class="navbar-brand" href="{% url 'Laboratory:home' %}"><img src="{% static 'images/logo.png' %}" alt="image" /></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation">
                     <span></span>
                     <span></span>
@@ -61,28 +60,28 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
                     <ul class="navbar-nav">
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:home' %}active{% endif %}" href="{% url 'Nady_System:home' %}">Home</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:home' %}active{% endif %}" href="{% url 'Laboratory:home' %}">Home</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:about' %}active{% endif %}" href="{% url 'Nady_System:about' %}">About Us</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:about' %}active{% endif %}" href="{% url 'Laboratory:about' %}">About Us</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:services' %}active{% endif %}" href="{% url 'Nady_System:services' %}">Services</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:services' %}active{% endif %}" href="{% url 'Laboratory:services' %}">Services</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:appointment' %}active{% endif %}" href="{% url 'Nady_System:appointment' %}">Appointment</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:appointment' %}active{% endif %}" href="{% url 'Laboratory:appointment' %}">Appointment</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:gallery' %}active{% endif %}" href="{% url 'Nady_System:gallery' %}">Gallery</a></a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:gallery' %}active{% endif %}" href="{% url 'Laboratory:gallery' %}">Gallery</a></a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:team' %}active{% endif %}" href="{% url 'Nady_System:team' %}">Doctor</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:team' %}active{% endif %}" href="{% url 'Laboratory:team' %}">Doctor</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:blog' %}active{% endif %}" href="{% url 'Nady_System:blog' %}">Blog</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:blog' %}active{% endif %}" href="{% url 'Laboratory:blog' %}">Blog</a>
                         </li>
                         <li>
-                            <a class="nav-link {% if request.resolver_match.view_name == 'Nady_System:contact' %}active{% endif %}" href="{% url 'Nady_System:contact' %}">Contact</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'Laboratory:contact' %}active{% endif %}" href="{% url 'Laboratory:contact' %}">Contact</a>
                         </li>
                         <li>
                             <a class="nav-link {% if request.resolver_match.view_name == 'Payment:paypal' %}active{% endif %}" href="{% url 'Payment:paypal' %}">Paypal</a>
@@ -152,7 +151,7 @@
     </footer>
     <!-- End Footer -->
 
-    <!-- <a href="#" id="scroll-to-top" class="new-btn-d br-2"><i class="fa fa-angle-up"></i></a> -->
+    <a href="#" id="scroll-to-top" class="new-btn-d br-2"><i class="fa fa-angle-up"></i></a> 
 
     <!-- ALL JS FILES -->
     <script src="{% static 'js/jquery.min.js' %}"></script>

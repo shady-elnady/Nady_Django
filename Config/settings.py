@@ -57,8 +57,8 @@ THIRD_LIBRARIES= [
     'mptt',
     'django_spaghetti',
     'import_export',
-    'djmoney',
-    'djmoney.contrib.exchange',
+    # 'djmoney',
+    # 'djmoney.contrib.exchange',
 ]
 
 MY_APPS= [
@@ -250,16 +250,6 @@ GRAPHQL_JWT = {
 }
 
 
-## Money
-
-DEFAULT_CURRENCY= 'EGP'
-
-CURRENCY_MAX_DIGITS= 10
-
-CURRENCY_DECIMAL_PLACES= 2
-
-BASE_CURRENCY= "USD"
-
 ##
 
 SPAGHETTI_SAUCE = {
@@ -273,9 +263,28 @@ SPAGHETTI_SAUCE = {
     },
 }
 
+
+
+## Money
+
+DEFAULT_CURRENCY= 'EGP'
+
+CURRENCY_MAX_DIGITS= 10
+
+CURRENCY_DECIMAL_PLACES= 2
+
+BASE_CURRENCY= "USD"
+
 ###
 ## add New Currency
-import moneyed
+# import moneyed
+
+# BOB= moneyed.add_currency( 
+#     code='BOB',
+#     numeric='068',
+#     name='Pesoboliviano',
+#     countries=('BOLIVIA',),
+# )
 
 CURRENCIES = (
     'USD',
@@ -285,20 +294,15 @@ CURRENCY_CHOICES = [
     ('USD', 'USD $'),
     ('EUR', 'EUR €'),
 ]
-BOB= moneyed.add_currency( 
-    code='BOB',
-    numeric='068',
-    name='Pesoboliviano',
-    countries=('BOLIVIA',),
-)
-# Rate Exchange
-OPEN_EXCHANGE_RATES_APP_ID= config("OPEN_EXCHANGE_RATES_API_1")
+
+# # Rate Exchange
+# OPEN_EXCHANGE_RATES_APP_ID= config("OPEN_EXCHANGE_RATES_API_1")
 
 # FIXER_ACCESS_KEY= config("FIXER_API_2")
 
 # EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
 
-EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.base.BaseExchangeBackend'
+# EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.base.BaseExchangeBackend'
 
 
 

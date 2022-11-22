@@ -82,15 +82,6 @@ pip install graphene-gis
 pip install django-cursor-pagination
 
 
-pip install graphene-djmoney
-    https://www.uplift.ltd/posts/using-django-and-graphql-to-manage-money-and-finances-check-out-graphene-djmoney/
-    django-money-1.3.1
-    graphene-djmoney-0.1.3
-    psycopg2-binary-2.9.3
-    py-moneyed-0.8.0
-    
-    pip install django-money
-        https://github.com/django-money/django-money
 
 pip install geoip2
     aiohttp-3.8.3
@@ -186,3 +177,29 @@ python manage.py startapp Product
 python manage.py startapp Entity 
 python manage.py startapp Patient
 python manage.py startapp Report 
+
+
+pip install django-currencies
+    https://pypi.org/project/django-currencies/
+
+
+pip install django-exchange
+    https://pypi.org/project/django-exchange/
+
+
+pip install django-money
+    https://django-money.readthedocs.io/en/latest/
+
+
+pip install graphene-djmoney
+    https://www.uplift.ltd/posts/using-django-and-graphql-to-manage-money-and-finances-check-out-graphene-djmoney/
+    django-money-1.3.1
+    graphene-djmoney-0.1.3
+    psycopg2-binary-2.9.3
+    py-moneyed-0.8.0
+    
+    pip install django-money
+        https://github.com/django-money/django-money
+
+
+pip install google-currency

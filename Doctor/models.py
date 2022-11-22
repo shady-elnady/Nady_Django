@@ -8,23 +8,17 @@ from Person.models import Person
 # Create your models here.
 
 
-
-
-   
-
-
-
 class Doctor(Person):
     
     class MedicalSpecialization(models.TextChoices):
         Childern= "Ch", _("Childern")
     
-    medical_specialization = models.CharField(
-        max_length= 4,
+    medical_specialization= models.CharField(
+        max_length= 2,
         choices= MedicalSpecialization.choices,
         verbose_name= _("Medical Specialization"),
     )
 
     class Meta:
-        verbose_name = _("Doctor")
-        verbose_name_plural = _("Doctors")
+        verbose_name= _("Doctor")
+        verbose_name_plural= _("Doctors")

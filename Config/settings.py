@@ -291,13 +291,12 @@ BOB= moneyed.add_currency(
     name='Pesoboliviano',
     countries=('BOLIVIA',),
 )
-BASE_CURRENCY= "USD"
 # Rate Exchange
 OPEN_EXCHANGE_RATES_APP_ID= config("OPEN_EXCHANGE_RATES_API_1")
 
-FIXER_ACCESS_KEY= config("FIXER_API_2")
+# FIXER_ACCESS_KEY= config("FIXER_API_2")
 
-EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
+# EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
 
 EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.base.BaseExchangeBackend'
 

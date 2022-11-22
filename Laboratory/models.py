@@ -7,7 +7,7 @@ from djongo.models import ArrayReferenceField
 from polymorphic.models import PolymorphicModel
 
 from GraphQL.models import BaseModel, BaseModelImageOnly, BaseModelName, FacilityTypes, Runs, Scores, upload_to
-from GraphQL.custom_fields import QRField
+from GraphQL.custom_fields import BarCodeField, QRField
 from Payment.models import Payment
 from Unit.models import Unit
 from Facility.models import Branch, Facility, Shift
@@ -1094,10 +1094,7 @@ class VitalSign(BaseModelName):
 
 
 class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
-    qr_code= QRField(
-        primary_key= True,
-        verbose_name= _("Prescription QR Code"),
-    )
+    qr_code= BarCodeField()
     branch= models.ForeignKey(
         Branch,
         on_delete= models.CASCADE,
@@ -1134,6 +1131,8 @@ class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
     ) # جهةالتحويل
     phlebotomy_required_time= models.DateTimeField(
         default= now,
+        null= True,
+        blank= True,
         editable= True,
         verbose_name= _("Phlebotomy Required Time"),
     ) # الوقت المطلوب للسحب

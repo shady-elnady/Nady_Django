@@ -78,3 +78,11 @@ def signUp(req):
     }
 
     return render(req, "registration/signUp.html", context=context)
+
+
+
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.

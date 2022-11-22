@@ -137,7 +137,7 @@ WSGI_APPLICATION = 'Config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': "Nady_Django",
+        'NAME': "Nady_BackEnd_Django",
     }
 }
 

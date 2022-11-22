@@ -157,7 +157,9 @@ tensorflow install :
         https://chem.libretexts.org/Courses/Intercollegiate_Courses/Cheminformatics_OLCC_(2019)/03%3A_Database_Resources_in_Cheminformatics/3.08%3A_Python_Assignment
 
 
-
+## BareCode
+    pip install python-barcode
+        https://python-barcode.readthedocs.io/en/stable/
 
 python manage.py makemigrations
 python manage.py migrate

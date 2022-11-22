@@ -74,7 +74,6 @@ INSTALLED_APPS = [
     "Unit",
     "Payment",  # ماليات
     "Language",
-    "Utils",
     "Location",
     "Facility",  # منشآت
     "Person",
@@ -84,7 +83,11 @@ INSTALLED_APPS = [
     "Doctor",
     "User",
     "Article",
+    "Account",
+    "Service",
     "Tool",
+    # "Digit",
+    "Utils",
 ]
 
 MIDDLEWARE = [

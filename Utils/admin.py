@@ -9,6 +9,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 # Register your models here.
 
+app_config = apps.get_app_config('Utils') # Replace your_app_name it is just a placeholder
 models = apps.get_models()
 
 

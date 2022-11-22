@@ -48,15 +48,7 @@ AUTH_USER_MODEL = "User.User"
 
 # Application definition
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
-    ## Libraries
+THIRD_LIBRARIES= [
     'graphene_django',
     'debug_toolbar',
     'django_filters',
@@ -67,14 +59,14 @@ INSTALLED_APPS = [
     'import_export',
     'djmoney',
     'djmoney.contrib.exchange',
+]
 
-    ## My Apps
+MY_APPS= [
     "GraphQL",
     "Entity",
     "Unit",
     "Payment",  # ماليات
     "Language",
-    "Utils",
     "Location",
     "Facility",  # منشآت
     "Person",
@@ -84,7 +76,25 @@ INSTALLED_APPS = [
     "Doctor",
     "User",
     "Article",
+    "Account",
+    "Service",
     "Tool",
+    "Utils",
+]
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    
+    ## Libraries
+    *THIRD_LIBRARIES,
+
+    ## My Apps
+    *MY_APPS,
 ]
 
 MIDDLEWARE = [
@@ -255,25 +265,7 @@ BASE_CURRENCY= "USD"
 SPAGHETTI_SAUCE = {
     'apps': [
         'auth',
-        "GraphQL",
-        "Entity",
-        "Unit",
-        "Payment",  # ماليات
-        "Language",
-        "Location",
-        "Facility",  # منشآت
-        "Person",
-        "Product",
-        "Laboratory",
-        "Report",
-        "Doctor",
-        "User",
-        "Article",
-        "Account",
-        "Service",
-        "Tool",
-        # "Digit",
-        "Utils",
+        *MY_APPS,
     ],
     'show_fields': True,
     'exclude': {

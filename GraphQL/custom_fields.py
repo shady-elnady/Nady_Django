@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from datetime import datetime
+from django.contrib.auth import get_user_model
 
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -29,16 +30,16 @@ class BarCodeField(models.CharField):
         # Give a format to the date
         # Displays something like: Aug. 27, 2017, 2:57 p.m.
         formatedDate = myDate.strftime("%Y-%m-%d %H:%M:%S")
-
-        if settings.AUTH_USER_MODEL.is_authenticated and settings.AUTH_USER_MODEL.is_staf:
+        currentUser= get_user_model()
+        if currentUser.is_staff:
             # Do something for authenticated users.
-            user= settings.AUTH_USER_MODEL.id
-            branch= settings.AUTH_USER_MODEL.branch
+            user= currentUser.id
+            # branch= settings.AUTH_USER_MODEL.branch
         else:
             # Do something for anonymous users.            
             return redirect(reverse_lazy('login'))
 
-        kwargs['default'] = f"{user-branch-formatedDate}"
+        kwargs['default'] = f"{user}-{formatedDate}"
         super().__init__(*args, **kwargs)
 
 

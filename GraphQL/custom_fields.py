@@ -8,3 +8,11 @@ class QRField(models.Field):
 
     def db_type(self, connection):
         return "char(%s)" % self.max_length
+
+
+
+
+class BarCodeField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        kwargs["max_length"]= 24
+        super().__init__(*args, **kwargs)

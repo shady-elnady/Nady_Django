@@ -2,7 +2,7 @@
 name = "Nady-System-Back-End"
 version = "1.0.0"
 description = "Nady Django App using Django & Graphql"
-authors = ["Shady El Nady <r>"]
+authors = ["Shady El Nady "]
 
 [tool.poetry.dependencies]
 python = "^3.9"

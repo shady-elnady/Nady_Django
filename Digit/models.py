@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from Lab.models import BaseModel, BaseModelImage, BaseModelName
+
+from GraphQL.models import BaseModelImage
 # import tensorflow as tf
 # from PIL import Image
 #from keras.preprocessing.image import img_to_array
@@ -15,7 +16,7 @@ from Lab.models import BaseModel, BaseModelImage, BaseModelName
 # Create your models here.
 
 
-class Digit(BaseModelImage, BaseModel, BaseModelName):
+class Digit(BaseModelImage, BaseModel):
   
   def __str__(self) -> str:
     return str(self.id)

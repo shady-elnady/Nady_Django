@@ -15,4 +15,6 @@ class QRField(models.Field):
 class BarCodeField(models.CharField):
     def __init__(self, *args, **kwargs):
         kwargs["max_length"]= 24
+        kwargs["primary_key"]= True
+        kwargs["verbose_name"]= "BarCode"
         super().__init__(*args, **kwargs)

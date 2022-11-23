@@ -26,7 +26,7 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("", include("Laboratory.urls", namespace="Laboratory")),
     path("", include("GraphQL.urls", namespace= "GraphQL")),
-    path("", include("Digit.urls", namespace="Digit")),
+    path("digit/", include("Digit.urls", namespace="Digit")),
     path("payment", include("Payment.urls", namespace= "Payment")),
     path('admin/', admin.site.urls),
     path("__debug__/", include(debug_toolbar.urls)),

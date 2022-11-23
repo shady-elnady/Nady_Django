@@ -78,7 +78,7 @@ MY_APP= [
     "Account",
     "Service",
     "Tool",
-    # "Digit",
+    "Digit",
     "Utils",
 ]
 

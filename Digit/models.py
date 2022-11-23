@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from GraphQL.models import BaseModelImage
+from GraphQL.models import BaseModel, BaseModelImage
 # import tensorflow as tf
 # from PIL import Image
 #from keras.preprocessing.image import img_to_array

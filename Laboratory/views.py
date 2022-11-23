@@ -6,6 +6,7 @@ from Doctor.models import Doctor
 # Create your views here.
 
 
+
 app_name = "Laboratory"
 
 @login_required

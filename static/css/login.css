@@ -20,7 +20,7 @@ body {
 }
 
 .page {
-    background: #0f20b8;
+    background: transparent;
     display: flex;
     flex-direction: column;
     height: calc(100% - 40px);

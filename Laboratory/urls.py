@@ -22,7 +22,7 @@ app_name = "Laboratory"
 
 
 urlpatterns = [
-    path("", home, name="home"),
+    path("", home, name="Home"),
     path("about/", about, name="about"),
     path("services/", services, name="services"),
     path("appointment/", appointment, name="appointment"),

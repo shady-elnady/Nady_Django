@@ -308,5 +308,5 @@ CURRENCY_CHOICES = [
 
 ###
 LOGIN_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGIN_REDIRECT_URL = reverse_lazy('Home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')

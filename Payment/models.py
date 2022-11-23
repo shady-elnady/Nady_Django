@@ -3,9 +3,9 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from polymorphic.models import PolymorphicModel
-from djmoney.models.fields import MoneyField
-from djmoney.money import Money
-from djmoney.models.validators import MaxMoneyValidator,MinMoneyValidator
+# from djmoney.models.fields import MoneyField
+# from djmoney.money import Money
+# from djmoney.models.validators import MaxMoneyValidator,MinMoneyValidator
 from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod
 
 # Create your models here.
@@ -78,21 +78,24 @@ class PeriodicFinancialItem(models.Model): # البنود الماليه الد�
         choices= FinancialPeriodicTimes.choices,
         verbose_name= _("Periodic Time"),
     )
-    amount= MoneyField(
-        max_digits=settings.CURRENCY_MAX_DIGITS,
-        decimal_places=settings.CURRENCY_DECIMAL_PLACES,
-        default_currency=settings.BASE_CURRENCY,
-        null=True,
-        blank=True,
-        validators=[
-            MinMoneyValidator(10),
-            MaxMoneyValidator(1500),
-            MinMoneyValidator(Money(500,'NOK')),
-            MaxMoneyValidator(Money(900,'NOK')),
-            MinMoneyValidator({'EUR':100,'USD':50}),
-            MaxMoneyValidator({'EUR':1000,'USD':500}),
-        ]
+    amount= models.FloatField(
+        verbose_name= _("Amount"),
     )
+    # amount= MoneyField(
+    #     max_digits=settings.CURRENCY_MAX_DIGITS,
+    #     decimal_places=settings.CURRENCY_DECIMAL_PLACES,
+    #     default_currency=settings.BASE_CURRENCY,
+    #     null=True,
+    #     blank=True,
+    #     validators=[
+    #         MinMoneyValidator(10),
+    #         MaxMoneyValidator(1500),
+    #         MinMoneyValidator(Money(500,'NOK')),
+    #         MaxMoneyValidator(Money(900,'NOK')),
+    #         MinMoneyValidator({'EUR':100,'USD':50}),
+    #         MaxMoneyValidator({'EUR':1000,'USD':500}),
+    #     ]
+    # )
     currency= models.ForeignKey(
         Currency,
         default= settings.DEFAULT_CURRENCY,

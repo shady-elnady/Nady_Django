@@ -56,8 +56,8 @@ THIRD_LIBRARIES= [
     'mptt',
     'django_spaghetti',
     'import_export',
-    'djmoney',
-    'djmoney.contrib.exchange',
+    # 'djmoney',
+    # 'djmoney.contrib.exchange',
 ]
 
 MY_APP= [
@@ -275,7 +275,6 @@ SPAGHETTI_SAUCE = {
 
 ###
 ## add New Currency
-import moneyed
 
 CURRENCIES = (
     'USD',
@@ -285,12 +284,15 @@ CURRENCY_CHOICES = [
     ('USD', 'USD $'),
     ('EUR', 'EUR €'),
 ]
-BOB= moneyed.add_currency( 
-    code='BOB',
-    numeric='068',
-    name='Pesoboliviano',
-    countries=('BOLIVIA',),
-)
+
+# import moneyed
+
+# BOB= moneyed.add_currency( 
+#     code='BOB',
+#     numeric='068',
+#     name='Pesoboliviano',
+#     countries=('BOLIVIA',),
+# )
 
 
 

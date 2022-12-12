@@ -16,6 +16,7 @@ urlpatterns = [
         csrf_exempt(
             FileUploadGraphQLView.as_view(
                 graphiql=False,
+                # schema=schema,
             )
         ),
         name= "GraphQL",

@@ -23,9 +23,10 @@ import debug_toolbar
 
 
 urlpatterns = [
-    path("", include("django.contrib.auth.urls")),
+    path("", include("django.contrib.auth.urls")), # Default Auth URL
     path("", include("Laboratory.urls", namespace="Laboratory")),
     path("", include("GraphQL.urls", namespace= "GraphQL")),
+    path('accounts/', include('allauth.urls')), # allauth 3rd Library
     path("digit/", include("Digit.urls", namespace="Digit")),
     path("payment", include("Payment.urls", namespace= "Payment")),
     path('admin/', admin.site.urls),

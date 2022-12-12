@@ -125,7 +125,9 @@ tensorflow install :
     3- pip install tensorflow
     4 -pip install tf-nightly-gpu
 
+## pip install django-allauth
 
+pip install django-bootstrap-form django-bootstrap5 django-crispy-forms
 
 ## Math Helper:
     pip install sympy
@@ -184,3 +186,19 @@ python manage.py startapp Product
 python manage.py startapp Entity 
 python manage.py startapp Patient
 python manage.py startapp Report 
+
+
+
+yarn add @ckeditor/ckeditor5-build-classic @simonwep/pickr @tarekraafat/autocomplete.js aos apexcharts bootstrap chart.js choices.js cleave.js dom-autoscroller dragula dropzone echarts feather-icons fg-emoji-picker filepond filepond-plugin-file-encode filepond-plugin-file-validate-size filepond-plugin-image-exif-orientation filepond-plugin-image-preview flatpickr fs fullcalendar glightbox gmaps gridjs isotope-layout jsvectormap leaflet list.js list.pagination.js masonry-layout momen multi.js node-waves nouislider particles.js prismjs quill rater-js shepherd.js simplebar sortablejs sweetalert2 swiper toastify-js wnumb caniuse-lite
+
+
+
+
+yarn add browser-sync del gulp gulp-autoprefixer gulp-cached gulp-clean-css gulp-cssnano gulp-file-include gulp-if gulp-npm-dist gulp-rename gulp-replace gulp-rtlcss gulp-sass gulp-sourcemaps gulp-uglify gulp-useref-plus sass --dev
+
+
+pip install asgiref certifi cffi charset-normalizer coinbase-commerce cryptography defusedxml dj-database-url Django django-allauth django-bootstrap-form django-bootstrap5 django-crispy-forms django-embed-video django-querycount gunicorn idna authlib paykassa-api-sdk Pillow psycopg2 pycparser PyJWT python3-openid requests requests-oauthlib six sqlparse types-cryptography tzdata urllib3
+
+
+error :
+    backports.zoneinfo

@@ -3,18 +3,19 @@ from django.contrib.auth import authenticate, login as auth_login, logout, authe
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
+from allauth.account.views import PasswordChangeView, PasswordSetView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse
 
 from .models import User
 from .forms import RegistrationForm, SignUpForm
 
 
 # Create your views here.
-
 
 
 class RegistrationView(CreateView):
@@ -78,3 +79,15 @@ def signUp(req):
     }
 
     return render(req, "registration/signUp.html", context=context)
+
+
+#######################################################################################
+
+## from Velzon
+
+class MyPasswordChangeView( PasswordChangeView):
+    success_url = reverse_lazy("dashboards:dashboard")
+
+
+class MyPasswordSetView( PasswordSetView):
+    success_url = reverse_lazy("dashboards:dashboard")

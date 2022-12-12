@@ -16,6 +16,7 @@ from decouple import config
 import calendar
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.contrib.messages import constants as messages
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,16 +38,61 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 TEMPLATE_DEBUG = config('TEMPLATE_DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
+    "*",
     "localhost",
     "127.0.0.1",
     "herokuapp.com",
 ]
 
-
 AUTH_USER_MODEL = "User.User"
 
+## All Auth
+ALL_AUTH_PROVIDERS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.instagram',
+    # 'allauth.socialaccount.providers.linkedin',
+    # 'allauth.socialaccount.providers.linkedin_oauth2',
+    # 'allauth.socialaccount.providers.microsoft',
+    # 'allauth.socialaccount.providers.paypal',
+    # 'allauth.socialaccount.providers.telegram',
+    # 'allauth.socialaccount.providers.trello',
+    # 'allauth.socialaccount.providers.twitter',
+    # 'allauth.socialaccount.providers.twitter_oauth2',
+    # 'allauth.socialaccount.providers.yahoo',
+    # 'allauth.socialaccount.providers.zoom',
+]
 
-# Application definition
+SITE_ID = 1
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '461124974835-3a38d911etrm2psv5ks9ib67e7scuoqb.apps.googleusercontent.com',
+            'secret': 'Ft7O_UunoV7DMN4SoX9EpRrj',
+            'key': ''
+        },
+        # 'SCOPE': [
+        #     'profile',
+        #     'email',
+        # ],
+        # 'AUTH_PARAMS': {
+        #     'access_type': 'online',
+        # }
+    }
+}
+
+
+## Application definition
 THIRD_LIBRARIES= [
     'graphene_django',
     'debug_toolbar',
@@ -58,6 +104,9 @@ THIRD_LIBRARIES= [
     'import_export',
     # 'djmoney',
     # 'djmoney.contrib.exchange',
+    #allauth
+    *ALL_AUTH_PROVIDERS,  
+    'crispy_forms',  
 ]
 
 MY_APP= [
@@ -120,7 +169,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', # `allauth` needs this from django
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -240,8 +289,12 @@ GRAPHENE = {
 }
 
 AUTHENTICATION_BACKENDS = [
+    # for graphql_jwt
     "graphql_jwt.backends.JSONWebTokenBackend",
-    "django.contrib.auth.backends.ModelBackend",
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 GRAPHQL_JWT = {
@@ -300,3 +353,43 @@ CURRENCY_CHOICES = [
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+##  All Auth Configurations
+# LOGIN_REDIRECT_URL = "/"
+# LOGIN_URL = "account_login"
+# ACCOUNT_LOGOUT_ON_GET = False
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS =True
+# SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# All Auth Forms Customization 
+
+ACCOUNT_FORMS = {
+    "login": "User.forms.UserLoginForm",
+    "signup": "User.forms.UserRegistrationForm",
+    "change_password": "User.forms.PasswordChangeForm",
+    "set_password": "User.forms.PasswordSetForm",
+    "reset_password": "User.forms.PasswordResetForm",
+    "reset_password_from_key": "User.forms.PasswordResetKeyForm",
+}
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "alert-info",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-danger",
+}
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# SMTP Configure
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'shadyelnady.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'shadyelnady.gmail.com'
+EMAIL_HOST_PASSWORD = '12345'
+DEFAULT_FROM_EMAIL = 'shadyelnady.gmail.com'

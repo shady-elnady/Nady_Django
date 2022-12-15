@@ -12,11 +12,12 @@ from GraphQL.models import (
     FacilityTypes,
     Measurements,
 )
+from Unit.models import Unit
 from Location.models import Address, Country
 from Payment.models import Currency, Payment
 from Facility.models import Facility
-from Person.models import Employee, Person
-from Unit.models import Unit
+from Person.models import Person
+from Employee.models import Employee
 
 
 # Create your models here.

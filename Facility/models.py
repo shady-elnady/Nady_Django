@@ -124,3 +124,10 @@ class MobileNetWork(Facility):  # شركات محمول
     class Meta:
         verbose_name = _("Mobile NetWork")
         verbose_name_plural = _("Mobile NetWorks")
+
+
+class Departement(BaseModelName):
+
+    class Meta:
+        verbose_name= _("Departement")
+        verbose_name_plural= _("Departements")

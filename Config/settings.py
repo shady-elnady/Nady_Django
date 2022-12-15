@@ -47,7 +47,7 @@ ALLOWED_HOSTS = [
 AUTH_USER_MODEL = "User.User"
 
 ## All Auth
-ALL_AUTH_PROVIDERS = [
+ALL_AUTH = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -105,7 +105,7 @@ THIRD_LIBRARIES= [
     # 'djmoney',
     # 'djmoney.contrib.exchange',
     #allauth
-    *ALL_AUTH_PROVIDERS,  
+    *ALL_AUTH,  
     'crispy_forms',  
 ]
 
@@ -118,7 +118,13 @@ MY_APP= [
     "Location",
     "Facility",  # منشآت
     "Person",
+    "Employee",
     "Product",
+    "Specimen",
+    "Parameters",
+    "Analysis",
+    "Kat",
+    "Prescription",
     "Laboratory",
     "Report",
     "Doctor",

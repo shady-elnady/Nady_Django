@@ -8,12 +8,6 @@ from Person.models import Person
 # Create your models here.
 
 
-
-
-   
-
-
-
 class Doctor(Person):
     
     class MedicalSpecialization(models.TextChoices):

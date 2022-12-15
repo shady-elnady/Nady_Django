@@ -9,7 +9,7 @@ from polymorphic.models import PolymorphicModel
 from GraphQL.models import  BaseModelEmoji
 from Entity.models import Entity
 from Language.models import Language
-from Facility.models import Branch, Job, Shift
+from Facility.models import Job
 
 
 # Create your models here.
@@ -210,35 +210,3 @@ class Kinship(models.Model):
         )
         verbose_name = _("Kinship")
         verbose_name_plural = _("Kinships")
-
-
-class Employee(Person):
-
-    work_in_branch = models.ForeignKey(
-        Branch,
-        on_delete= models.CASCADE,
-        related_name= _("Employees"),
-        verbose_name= _("Work in Branch"),
-    )
-    salary = models.FloatField(
-        verbose_name= _("Salary"),
-    )
-    allowed_discount_rate = models.FloatField(
-        default= 5.0,
-        verbose_name= _("Allowed Discount Rate"),
-    ) # نسبه الخصم المسموحه
-    shifts = models.ManyToManyField(
-        Shift,
-        related_name= _("Employees"),
-        verbose_name= _("Shifts"),
-    )
-        
-    class Meta:
-        permissions = [
-            (
-                "set_published_status",
-                "Can set the status of the post to either publish or not"
-            )
-        ]
-        verbose_name = _("Employee")
-        verbose_name_plural = _("Employees")

@@ -111,17 +111,19 @@ THIRD_LIBRARIES= [
 
 MY_APP= [
     "GraphQL",
-    "Entity",
     "Unit",
-    "Payment",  # ماليات
     "Language",
+    "Payment",  # ماليات
     "Location",
+    "Entity",
     "Facility",  # منشآت
     "Person",
     "Employee",
     "Product",
+    "Invoice",
+    "Drug",
     "Specimen",
-    "Parameters",
+    "Analytic",
     "Analysis",
     "Kat",
     "Prescription",

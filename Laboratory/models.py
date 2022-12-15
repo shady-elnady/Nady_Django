@@ -3,23 +3,14 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
-from djongo.models import ArrayReferenceField
 from polymorphic.models import PolymorphicModel
+
+from GraphQL.models import BaseModel, BaseModelName
+from Invoice.models import LineInInvoice
 from Analysis.models import Report
 from Employee.models import Employee
-
-from GraphQL.models import BaseModel, BaseModelImageOnly, BaseModelName, FacilityTypes, Runs, Scores, upload_to
-from GraphQL.custom_fields import BarCodeField, QRField
 from Kat.models import LabSupply
-from Parameters.models import Analytics
-from Payment.models import Payment
 from Prescription.models import Phlebotomy, Prescription, PrescriptionPayment
-from Specimen.models import Sample
-from Unit.models import Unit
-from Facility.models import Branch, Facility, Shift
-from Product.models import LineInInvoice, Product
-from Person.models import Person, ReferenceLimitingFactor
-from Doctor.models import Doctor
 
 # Create your models here.
 

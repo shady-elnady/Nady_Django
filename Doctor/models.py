@@ -10,13 +10,18 @@ from Person.models import Person
 
 class Doctor(Person):
     
-    class MedicalSpecialization(models.TextChoices):
+    class MedicalSpecialties(models.TextChoices): # تخصصات الاطباء
         Childern= "Ch", _("Childern")
     
-    medical_specialization = models.CharField(
+    nick_name= models.CharField(
+        max_length= 25,
+        unique= True,
+        verbose_name= _("Nick Name"),
+    ) # أسم الشهره
+    medical_specialty = models.CharField(
         max_length= 4,
-        choices= MedicalSpecialization.choices,
-        verbose_name= _("Medical Specialization"),
+        choices= MedicalSpecialties.choices,
+        verbose_name= _("Medical Specialty"),
     )
 
     class Meta:

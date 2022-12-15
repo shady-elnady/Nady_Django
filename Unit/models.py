@@ -4,9 +4,25 @@ from django.utils.translation import gettext_lazy as _
 
 from polymorphic.models import PolymorphicModel
 
-from GraphQL.models import BaseModelNative, Measurements
+from GraphQL.models import BaseModelName, BaseModelNative, Measurements
 
 # Create your models here.
+
+
+class Category(BaseModelName):
+    category_parent= models.ForeignKey(
+        "self",
+        null= True,
+        blank= True,
+        limit_choices_to= {"category_parent__isnull": True},
+        on_delete= models.CASCADE,
+        related_name= _("Sub Categories+"),
+        verbose_name= _("Category Parent"),
+    )
+
+    class Meta:
+        verbose_name= _("Category")
+        verbose_name_plural= _("Categories")
 
 
 class Prefix(BaseModelNative):

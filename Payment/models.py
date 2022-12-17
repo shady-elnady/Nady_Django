@@ -6,31 +6,32 @@ from polymorphic.models import PolymorphicModel
 # from djmoney.models.fields import MoneyField
 # from djmoney.money import Money
 # from djmoney.models.validators import MaxMoneyValidator,MinMoneyValidator
+
 from GraphQL.models import BaseModelName, BaseModelNative, PaymentMethod
 
 # Create your models here.
 
 
 class Currency(BaseModelNative):
-    # code = models.CharField(
+    # code= models.CharField(
     #     max_length=3,
-    #     unique=True,
+    #     unique= True,
     #     verbose_name=_("Code"),
     # )
-    symbol = models.CharField(
-        max_length=3,
-        unique=True,
-        verbose_name=_("Symbol"),
+    symbol= models.CharField(
+        max_length= 3,
+        unique= True,
+        verbose_name= _("Symbol"),
     )
-    # equal_dolar = models.FloatField(
-    #     blank=True,s
-    #     null=True,
+    # equal_dolar= models.FloatField(
+    #     blank= True,s
+    #     null= True,
     #     verbose_name=_("Equal Dolar"),
     # )
-    last_update = models.DateField(
-        auto_now=True,
-        null=True,
-        blank=True,
+    last_update= models.DateField(
+        auto_now= True,
+        null= True,
+        blank= True,
     )
 
     # def get_absolute_url(self):
@@ -73,7 +74,7 @@ class PeriodicFinancialItem(models.Model): # البنود الماليه الد�
         # related_name= _("Financials"),
         verbose_name= _("Financial Item"),
     )
-    periodic_time = models.CharField(
+    periodic_time= models.CharField(
         max_length= 2,
         choices= FinancialPeriodicTimes.choices,
         verbose_name= _("Periodic Time"),
@@ -85,8 +86,8 @@ class PeriodicFinancialItem(models.Model): # البنود الماليه الد�
     #     max_digits=settings.CURRENCY_MAX_DIGITS,
     #     decimal_places=settings.CURRENCY_DECIMAL_PLACES,
     #     default_currency=settings.BASE_CURRENCY,
-    #     null=True,
-    #     blank=True,
+    #     null= True,
+    #     blank= True,
     #     validators=[
     #         MinMoneyValidator(10),
     #         MaxMoneyValidator(1500),
@@ -168,19 +169,19 @@ class PeriodicPayment(Payment):
 # TODO PAYMENT
 # class Payment:
 #     class PayMethod(models.TextChoices):
-#         check = "Check"
-#         PayPal = "PayPal"
+#         check= "Check"
+#         PayPal= "PayPal"
 
-#     payment_method = models.CharField(max_length=10, choices=PayMethod.choices)
-#     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-#     payment_date = models.DateTimeField(auto_now_add=True)
-#     amount = models.DecimalField(max_digits=5, decimal_places=2)  #  المبلغ
-#     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+#     payment_method= models.CharField(max_length=10, choices=PayMethod.choices)
+#     customer= models.ForeignKey(Customer, on_delete=models.CASCADE)
+#     payment_date= models.DateTimeField(auto_now_add= True)
+#     amount= models.DecimalField(max_digits=5, decimal_places=2)  #  المبلغ
+#     currency= models.ForeignKey(Currency, on_delete=models.CASCADE)
 
 # TODO CURRENCY API
 # https://m3o.com/account/keys
 
-# API_key =  N2Q1OWUwNDctZDM4Ny00MDNkLWIxOGUtYWM1MTJlNGExYTUx
+# API_key=  N2Q1OWUwNDctZDM4Ny00MDNkLWIxOGUtYWM1MTJlNGExYTUx
 
 """
     curl "https://api.m3o.com/v1/currency/Codes" \
@@ -190,7 +191,7 @@ class PeriodicPayment(Payment):
 """
 
 ##  https://openexchangerates.org/account/app-ids
-# api ID = 82775e187c684ecaa9efc98e7f0e9381
+# api ID= 82775e187c684ecaa9efc98e7f0e9381
 
 
 
@@ -204,25 +205,25 @@ class PeriodicPayment(Payment):
 #         related_name= _("Financials"),
 #         verbose_name= _("Customer"),
 #     )
-#     currency = models.ForeignKey(
+#     currency= models.ForeignKey(
 #         Currency,
 #         default= settings.DEFAULT_CURRENCY,
 #         on_delete= models.CASCADE,
 #         related_name= _("Financials"),
 #         verbose_name= _("Currency"),
 #     )
-#     amount = models.FloatField(
+#     amount= models.FloatField(
 #         verbose_name= _("Amount"),
 #     )
 #     created_date= models.DateTimeField(
-#         auto_now_add=True,
+#         auto_now_add= True,
 #         editable=False,
 #         verbose_name=_("Created Date"),
 #     )
     
 #     # @property
 #     # def final_payments(self):
-#     #     total = 0
+#     #     total= 0
 #     #     for payment in self.payments.all():
 #     #         total += payment.amount
 #     #     return total

@@ -129,6 +129,19 @@ class BaseModelImageOnly(models.Model):
         abstract= True
 
 
+class BaseModelNameSVG(BaseModelName):
+    svg_img= models.ImageField(
+        upload_to= uploadSVG_to,
+        default= "svg/{instance.__class__.__name__}/default.svg",
+        null= True,
+        blank= True,
+        verbose_name= _("SVG Image"),
+    )
+
+    class Meta:
+        abstract= True
+
+
 class BaseModelSVG(models.Model):
     svg_img= models.ImageField(
         upload_to= uploadSVG_to,
@@ -141,6 +154,8 @@ class BaseModelSVG(models.Model):
     class Meta:
         abstract= True
 
+
+###########################################################################################
 
 class WeekDays(models.TextChoices):
     Saturday= "Sat", _(calendar.day_name[0])

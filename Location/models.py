@@ -6,7 +6,7 @@ import pytz
 from polymorphic.models import PolymorphicModel
 from djongo.models import ArrayReferenceField
 
-from GraphQL.models import BaseModelImage, BaseModelName, BaseModelNative, BaseModelSVG
+from GraphQL.models import BaseModelNameSVG, BaseModelNative, BaseModelSVG
 from Language.models import Language
 from Payment.models import Currency
 from Facility.models import MobileNetWork
@@ -78,7 +78,6 @@ class Country(BaseModelNative, BaseModelSVG):
         #     return reverse("_detail", kwargs={"pk": self.pk})
 
 
-
 class Governorate(BaseModelNative):  # المحافظه
     ## https://en.wikipedia.org/wiki/ISO_3166-2:EG
     tel_code= models.CharField(
@@ -148,10 +147,13 @@ class Street(BaseModelNative):
 class CommunicationWay(PolymorphicModel):
     owner= models.ForeignKey(
         Entity,
+        null= True,
+        blank= True,
         on_delete= models.CASCADE,
         related_name= _("Special_Communication_Ways"),
         verbose_name= _("Owner"),
     )
+
     @property
     def slug(self):
         return slugify(f"{self.pk}")
@@ -177,7 +179,10 @@ class Phone(CommunicationWay):
         related_name= _("Phones"),
         verbose_name= _("Country Code"),
     )
-    rest_number= models.CharField(max_length=7, verbose_name=_("Phone Number"))
+    rest_number= models.CharField(
+        max_length=7,
+        verbose_name=_("Phone Number"),
+    )
 
     class Meta:
         verbose_name= _("Phone")
@@ -224,9 +229,9 @@ class Address(BaseModelNative, CommunicationWay):
         verbose_name_plural= _("Address")
 
 
-class SocialMedia(BaseModelImage):
+class SocialMedia(BaseModelNameSVG):
     is_email= models.BooleanField(
-        verbose_name=_("is E-Mail"),
+        verbose_name= _("is E-Mail"),
     )
 
     class Meta:
@@ -234,16 +239,16 @@ class SocialMedia(BaseModelImage):
         verbose_name_plural= _("Social Medias")
 
 
-class SocialCommunication(BaseModelName, CommunicationWay):
-    social_media= models.ForeignKey(
-        SocialMedia,
-        on_delete=models.CASCADE,
-        verbose_name=_("Social Media"),
-    )
+# class SocialCommunication(BaseModelName, CommunicationWay):
+#     social_media= models.ForeignKey(
+#         SocialMedia,
+#         on_delete=models.CASCADE,
+#         verbose_name=_("Social Media"),
+#     )
 
-    class Meta:
-        verbose_name= _("Social Communication")
-        verbose_name_plural= _("Social Communications")
+#     class Meta:
+#         verbose_name= _("Social Communication")
+#         verbose_name_plural= _("Social Communications")
 
 
 class EMail(CommunicationWay):
@@ -258,7 +263,7 @@ class EMail(CommunicationWay):
         blank= True,
         limit_choices_to= {'is_email': True},
         on_delete= models.CASCADE,
-        related_name= _("E-Mails +"),
+        related_name= _("E-Mails"),
         verbose_name= _("Server"),
     )
     socila_media= models.ManyToManyField(
@@ -293,9 +298,9 @@ class Mobile(Phone):
         SocialMedia,
         verbose_name= _("Social Medias"),
     )
-    has_cach= models.BooleanField(
+    has_cach_pyment= models.BooleanField(
         default= False,
-        verbose_name= _("has Cach"),
+        verbose_name= _("has Cach Pyment"),
     )
 
     @property

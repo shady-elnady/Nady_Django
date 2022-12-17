@@ -35,15 +35,6 @@ class Prefix(BaseModelNative):
         verbose_name= _("Power"),
     ) 
 
-    def slug(self):
-        return slugify(f"{self.symbol}")
-
-    def __str__(self):
-        return f"{self.symbol}"
-
-    def __decode__(self):
-        return f"{self.symbol}"
-
     class Meta:
         verbose_name= _("Prefix")
         verbose_name_plural= _("Prefixes")
@@ -64,18 +55,8 @@ class Unit(PolymorphicModel, BaseModelNative):
     convert_to= models.ManyToManyField(
         "self",
         through= "UnitConvert",
-        symmetrical= True,
         verbose_name= _("Convert To"),
     )
-
-    def slug(self):
-        return slugify(f"{self.symbol}")
-
-    def __str__(self):
-        return f"{self.symbol}"
-
-    def __decode__(self):
-        return f"{self.symbol}"
 
     class Meta:
         verbose_name= _("Unit")
@@ -85,15 +66,21 @@ class Unit(PolymorphicModel, BaseModelNative):
     #     return reverse("_detail", kwargs={"pk": self.pk})
 
 
-class UnitSystem(Unit):
-    system_name= models.CharField(
-        max_length= 20,
-        verbose_name= _("System Name"),
+
+class OriginalUnit(Unit):
+    class InternationalSystemUnits(models.TextChoices):
+        CGS= "CGS"
+        MKS= "MKS"
+
+    international_system_unit= models.CharField(
+        max_length= 4,
+        choices= InternationalSystemUnits.choices,
+        verbose_name= _("International System Unit"),
     )
 
     class Meta:
-        verbose_name= _("Unit System")
-        verbose_name_plural= _("Units Systems")
+        verbose_name= _("Original Unit")
+        verbose_name_plural= _("Original Units")
 
 
 class ComplexUnit(Unit):
@@ -141,7 +128,7 @@ class UnitConvert(models.Model):
     to_unit= models.ForeignKey(
         Unit,
         on_delete= models.CASCADE,
-        related_name= _("%(app_label)s_%(class)s_Convert_To+"),
+        related_name= _("Coverted_Units"),
         verbose_name= _("to Unit"),
     )
     equation= models.CharField(

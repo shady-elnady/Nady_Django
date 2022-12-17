@@ -1,102 +1,102 @@
 [
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "English",
     "fields": {
       "native": "English",
       "iso_639_1": "en",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Arabic",
     "fields": {
       "native": "العربيه",
       "iso_639_1": "ar",
-      "rtl": true
+      "is_rtl": true
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "French",
     "fields": {
       "native": "français",
       "iso_639_1": "fr",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Chuvash",
     "fields": {
       "native": "чӑваш чӗлхи",
       "iso_639_1": "cv",
-      "rtl": false
+      "is_rtl": false
     }
   },
 
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "German",
     "fields": {
       "native": "Deutsch",
       "iso_639_1": "de",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Italian",
     "fields": {
       "native": "Italiano",
       "iso_639_1": "it",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Kurdish",
     "fields": {
       "native": "Kurdî, کوردی",
       "iso_639_1": "ku",
-      "rtl": true
+      "is_rtl": true
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Japanese",
     "fields": {
       "native": "日本語 (にほんご)",
       "iso_639_1": "ja",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Russian",
     "fields": {
       "native": "русский",
       "iso_639_1": "ru",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Spanish",
     "fields": {
       "native": "Española",
       "iso_639_1": "es",
-      "rtl": false
+      "is_rtl": false
     }
   },
   {
-    "model": "Languages.Language",
+    "model": "Language.Language",
     "pk": "Turkish",
     "fields": {
       "native": "Türkçe",
       "iso_639_1": "tr",
-      "rtl": false
+      "is_rtl": false
     }
   }
 ]

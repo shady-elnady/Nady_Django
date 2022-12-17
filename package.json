@@ -1,5 +1,5 @@
 {
-  "name": "NadyBackEnd",
+  "name": "nady_django",
   "version": "1.0.0",
   "description": "Django BackEnd System",
   "main": "index.js",

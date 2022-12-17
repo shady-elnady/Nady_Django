@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from GraphQL.models import BaseModelName, upload_to
 from Facility.models import Departement
-from Compound.models import Analytics, ReferenceRange
+from Analytic.models import Analytics, ReferenceRange
 from Product.models import Product
 from Specimen.models import Sample
 from Unit.models import Unit

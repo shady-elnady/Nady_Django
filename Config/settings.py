@@ -235,7 +235,7 @@ USE_TZ = True
 LANGUAGES = [
     ("ar", _("Arabic")),
     ("en", _("English")),
-    ("fr", _("french")),
+    ("fr", _("French")),
 ]
 
 
@@ -363,8 +363,8 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
 ##  All Auth Configurations
-# LOGIN_REDIRECT_URL = "/"
 # LOGIN_URL = "account_login"
+# LOGIN_REDIRECT_URL = "/"
 # ACCOUNT_LOGOUT_ON_GET = False
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
@@ -373,13 +373,14 @@ LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
 # All Auth Forms Customization 
 
+
 ACCOUNT_FORMS = {
-    "login": "User.forms.UserLoginForm",
-    "signup": "User.forms.UserRegistrationForm",
-    "change_password": "User.forms.PasswordChangeForm",
-    "set_password": "User.forms.PasswordSetForm",
-    "reset_password": "User.forms.PasswordResetForm",
-    "reset_password_from_key": "User.forms.PasswordResetKeyForm",
+    "login": "Account.forms.UserLoginForm",
+    "signup": "Account.forms.UserRegistrationForm",
+    "change_password": "Account.forms.PasswordChangeForm",
+    "set_password": "Account.forms.PasswordSetForm",
+    "reset_password": "Account.forms.PasswordResetForm",
+    "reset_password_from_key": "Account.forms.PasswordResetKeyForm",
 }
 
 MESSAGE_TAGS = {

@@ -291,3 +291,7 @@ class Measurements(models.TextChoices):
 #         Gibi= "Gi", _("gibi"), 2^30
 #         Mebi= "Mi", _("mebi"), 2^20
 #         Kibi= "Ki", _("kibi"), 2^10
+
+
+class MedicalSpecialties(models.TextChoices): # تخصصات الاطباء
+    Childern= "Ch", _("Childern")

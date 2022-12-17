@@ -8,7 +8,7 @@ from Facility.models import Departement, Facility
 
 from GraphQL.models import BaseModelImageOnly, BaseModelName, FacilityTypes, Runs, Scores
 from Kat.models import AnalyticalTechnique, Kat
-from Compound.models import Analytics, ReferenceRange
+from Analytic.models import Analytics, ReferenceRange
 from Person.models import ReferenceLimitingFactor
 from Specimen.models import Sample, Specimen
 

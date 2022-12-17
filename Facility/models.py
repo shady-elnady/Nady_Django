@@ -19,26 +19,33 @@ from Location.models import Country
 
 
 class Facility(Entity):  # منشاءت
-    owner = models.ForeignKey(
+
+    class Meta:
+        verbose_name= _("Facility")
+        verbose_name_plural= _("Facilities")
+
+
+class PublicFacility(Facility):  # منشاءت
+    owner= models.ForeignKey(
         to="Person.Person",
         on_delete= models.CASCADE,
         related_name= _("Facilities"),
-        verbose_name=_("Owner"),
+        verbose_name= _("Owner"),
     )
-    facility_type = models.CharField(
+    facility_type= models.CharField(
         max_length= 35,
         choices= FacilityTypes.choices,
         verbose_name=_("Facility Type"),
     )
 
     class Meta:
-        verbose_name = _("Facility")
-        verbose_name_plural = _("Facilities")
+        verbose_name= _("Public Facility")
+        verbose_name_plural= _("Public Facilities")
 
 
 class Store(BaseModelName):  # مخازن
 
-    owner_facility = models.ForeignKey(
+    owner_facility= models.ForeignKey(
         Facility,
         on_delete= models.CASCADE,
         related_name= _("Stores"),
@@ -46,13 +53,13 @@ class Store(BaseModelName):  # مخازن
     )
 
     class Meta:
-        verbose_name = _("Store")
-        verbose_name_plural = _("Stores")
+        verbose_name= _("Store")
+        verbose_name_plural= _("Stores")
 
 
 class Branch(Entity, BaseModel):
 
-    owning_facility = models.ForeignKey(
+    owning_facility= models.ForeignKey(
         Facility,
         on_delete= models.CASCADE,
         related_name= _("Branchs"),
@@ -60,13 +67,13 @@ class Branch(Entity, BaseModel):
     )    
 
     class Meta:
-        verbose_name = _("Branch")
-        verbose_name_plural = _("Branchs")
+        verbose_name= _("Branch")
+        verbose_name_plural= _("Branchs")
 
 
 class MobileNetWork(Facility):  # شركات محمول
 
-    tel_code = models.CharField(
+    tel_code= models.CharField(
         max_length= 5,
         blank= True,
         null= True,
@@ -75,8 +82,8 @@ class MobileNetWork(Facility):  # شركات محمول
     )
 
     class Meta:
-        verbose_name = _("Mobile NetWork")
-        verbose_name_plural = _("Mobile NetWorks")
+        verbose_name= _("Mobile NetWork")
+        verbose_name_plural= _("Mobile NetWorks")
 
 
 
@@ -104,20 +111,20 @@ class Departement(BaseModelName):
 
 class Shift(PolymorphicModel, BaseModel):  # شفتات ايام الاسبوع
 
-    week_day = models.CharField(
+    week_day= models.CharField(
         max_length= 10,
         choices= WeekDays.choices,
         verbose_name= _("Week Day"),
     )
-    day_part = models.CharField(
+    day_part= models.CharField(
         max_length=4,
         choices=DayParts.choices,
         verbose_name= _("Day Part"),
     )
-    attending_time = models.TimeField(
+    attending_time= models.TimeField(
         verbose_name= _("Attending Time"),
     )  # الحضور
-    leaving_time = models.TimeField(
+    leaving_time= models.TimeField(
         verbose_name= _("Leaving Time"),
     )  # الانصراف
 
@@ -137,15 +144,15 @@ class Shift(PolymorphicModel, BaseModel):  # شفتات ايام الاسبوع
         return self.leaving_time - self.attending_time
 
     class Meta:
-        unique_together = [["week_day", "day_part"]]
-        verbose_name = _("Shift")
-        verbose_name_plural = _("Shifts")
+        unique_together= [["week_day", "day_part"]]
+        verbose_name= _("Shift")
+        verbose_name_plural= _("Shifts")
 
 
 class Job(BaseModelName):
     class Meta:
-        verbose_name = _("Job")
-        verbose_name_plural = _("Jobs")
+        verbose_name= _("Job")
+        verbose_name_plural= _("Jobs")
 
     # def get_absolute_url(self):
     #     return reverse("_detail", kwargs={"pk": self.pk})

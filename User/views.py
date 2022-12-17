@@ -80,14 +80,3 @@ def signUp(req):
 
     return render(req, "registration/signUp.html", context=context)
 
-
-#######################################################################################
-
-## from Velzon
-
-class MyPasswordChangeView( PasswordChangeView):
-    success_url = reverse_lazy("dashboards:dashboard")
-
-
-class MyPasswordSetView( PasswordSetView):
-    success_url = reverse_lazy("dashboards:dashboard")

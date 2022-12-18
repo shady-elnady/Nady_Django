@@ -35,7 +35,7 @@ class PrivateClinic(Facility):
     owner_doctor= models.ForeignKey(
         Doctor,
         on_delete= models.CASCADE,
-        related_name= _("Facilities"),
+        related_name= _("private_clinics+"),
         verbose_name= _("Owner's Doctor"),
     )
 

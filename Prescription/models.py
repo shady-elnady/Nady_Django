@@ -3,12 +3,12 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from Analysis.models import Analysis, AnalysisMethod, GroupAnalysis, Report
 from Doctor.models import Doctor
-from Employee.models import Employee
+from Employee.models import Employee, EmployeeActivity
 from Facility.models import Branch, Facility
 from django.utils.timezone import now
 
 from GraphQL.models import BaseModel, BaseModelImageOnly, BaseModelName, FacilityTypes
-from GraphQL.custom_fields import BarCodeField, QRField
+from GraphQL.custom_fields import BarCodeField
 from Payment.models import Payment
 from Person.models import Person
 from Specimen.models import Specimen
@@ -63,27 +63,27 @@ class VitalSign(BaseModelName):
         المراقبة * في ti
         صاءم او فاطر
     """
-    max_value = models.FloatField(
+    max_value= models.FloatField(
         blank= True,
         null= True,
         verbose_name=_("Maximum Value"),
     )
-    min_value = models.FloatField(
+    min_value= models.FloatField(
         blank= True,
         null= True,
         verbose_name=_("Minimum Value"),
     )
-    low_normal_value = models.FloatField(
+    low_normal_value= models.FloatField(
         blank= True,
         null= True,
         verbose_name=_("Low Normal Value"),
     )
-    high_normal_value = models.FloatField(
+    high_normal_value= models.FloatField(
         blank= True,
         null= True,
         verbose_name=_("High Normal Value"),
     )
-    unit = models.ForeignKey(
+    unit= models.ForeignKey(
         Unit,
         on_delete= models.CASCADE,
         blank= True,
@@ -93,12 +93,12 @@ class VitalSign(BaseModelName):
     )
 
     class Meta:
-        verbose_name = _("Vital Sign")
-        verbose_name_plural = _("Vital Signs")
+        verbose_name= _("Vital Sign")
+        verbose_name_plural= _("Vital Signs")
 
 
 class Prescription(BaseModelImageOnly, BaseModel): # الروشتات
-    BaeC= BarCodeField()
+    bar_code= BarCodeField()
     branch= models.ForeignKey(
         Branch,
         on_delete= models.CASCADE,
@@ -312,8 +312,8 @@ class LineInReport(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Line In Report")
-        verbose_name_plural = _("Lines In Reports")
+        verbose_name= _("Line In Report")
+        verbose_name_plural= _("Lines In Reports")
 
 
 class PrescriptionReportImage(Analysis, BaseModelImageOnly):
@@ -348,8 +348,50 @@ class PrescriptionVitalSign(models.Model):  # المؤشرات الحيويه ل
 
     class Meta:
         unique_together= [
-            ["prescription", "vital_sign"],
+            [
+                "prescription",
+                "vital_sign",
+            ],
         ]
         verbose_name= _("Prescription Vital Sign")
         verbose_name_plural= _("Prescription Vital Signs")
 
+
+
+class PrescriptionEmployeeActivity(EmployeeActivity):
+    prescription= models.ForeignKey(
+        Prescription,
+        on_delete= models.CASCADE,
+        related_name= _("%(app_label)s_%(class)s_Visit"),
+        verbose_name= _("Prescription"),
+    )
+
+    class Meta:
+        verbose_name= _("Prescription Employee Activity")
+        verbose_name_plural= _("Prescription Employee Activities")
+
+
+class PhlebotomyEmployeeActivity(EmployeeActivity):
+    phlebotomy= models.ForeignKey(
+        Phlebotomy,
+        on_delete= models.CASCADE,
+        related_name= _("phlebotomists+"),
+        verbose_name= _("Phlebotomy"),
+    )
+
+    class Meta:
+        verbose_name= _("Phlebotomy Employee Activity")
+        verbose_name_plural= _("Phlebotomy Employee Activities")
+
+
+class PaymentEmployeeActivity(EmployeeActivity):
+    phlebotomy= models.ForeignKey(
+        PrescriptionPayment,
+        on_delete= models.CASCADE,
+        related_name= _("phlebotomists"),
+        verbose_name= _("Phlebotomy"),
+    )
+
+    class Meta:
+        verbose_name= _("Payment Employee Activity")
+        verbose_name_plural= _("Payment Employee Activities")

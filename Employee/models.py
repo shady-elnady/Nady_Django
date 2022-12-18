@@ -3,7 +3,10 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
+from polymorphic.models import PolymorphicModel
+
 from Facility.models import Branch, Shift
+from GraphQL.models import BaseModelName
 from Person.models import Person
 
 
@@ -133,3 +136,48 @@ class Attendance(models.Model):  # الحضور والغياب
     class Meta:
         verbose_name = _("Laboratory Attendance")
         verbose_name_plural = _("Laboratory Attendances")
+
+
+
+class Activity(BaseModelName):
+    
+    class Meta:
+        verbose_name= _("Activity")
+        verbose_name_plural= _("Activities")
+
+
+class EmployeeActivity(PolymorphicModel):
+    employee= models.ForeignKey(
+       Employee,
+        on_delete= models.CASCADE,
+        verbose_name= _("Employee"),
+    )
+    activity= models.ForeignKey(
+       Activity,
+        on_delete= models.CASCADE,
+        blank= True,
+        null= True,
+        related_name= _("Employee_Activities"),
+        verbose_name= _("Activity"),
+    )
+    execution_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Execution Time"),
+    )
+
+    class Meta:
+        verbose_name= _("Employee Activity")
+        verbose_name_plural= _("Employee Activities")
+
+
+class ReportEmployeeActivity(EmployeeActivity):
+    report= models.ForeignKey(
+       "Analysis.Report",
+        on_delete= models.CASCADE,
+        related_name= _("Employee_Activities"),
+        verbose_name= _("Report"),
+    )
+
+    class Meta:
+        verbose_name= _("Report Employee Activity")
+        verbose_name_plural= _("Report Employee Activities")

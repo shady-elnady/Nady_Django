@@ -9,8 +9,8 @@ from djongo.models import ArrayReferenceField
 from GraphQL.models import BaseModelNameSVG, BaseModelNative, BaseModelSVG
 from Language.models import Language
 from Payment.models import Currency
-from Facility.models import MobileNetWork
-from Entity.models import Entity
+# from Facility.models import MobileNetWork
+# from Entity.models import Entity
 
 # Create your models here.
 
@@ -144,15 +144,15 @@ class Street(BaseModelNative):
         verbose_name_plural= _("Streets")
 
 
-class CommunicationWay(PolymorphicModel):
-    owner= models.ForeignKey(
-        Entity,
-        null= True,
-        blank= True,
-        on_delete= models.CASCADE,
-        related_name= _("Special_Communication_Ways"),
-        verbose_name= _("Owner"),
-    )
+class CommunicationWay(PolymorphicModel, models.Model):
+    # owner= models.ForeignKey(
+    #     Entity,
+    #     null= True,
+    #     blank= True,
+    #     on_delete= models.CASCADE,
+    #     related_name= _("Special_Communication_Ways"),
+    #     verbose_name= _("Owner"),
+    # )
 
     @property
     def slug(self):
@@ -214,10 +214,10 @@ class Address(BaseModelNative, CommunicationWay):
         related_name= _("Address"),
         verbose_name= _("Street"),
     )    
-    neighbors= ArrayReferenceField(
-        to= Entity,
-        # model_form_class=NeighborForm,
-    )
+    # neighbors= ArrayReferenceField(
+    #     to= Entity,
+    #     # model_form_class=NeighborForm,
+    # )
     # TODO Location Google Maps
     location= models.CharField(
         max_length= 100,
@@ -263,7 +263,7 @@ class EMail(CommunicationWay):
         blank= True,
         limit_choices_to= {'is_email': True},
         on_delete= models.CASCADE,
-        related_name= _("E-Mails"),
+        related_name= _("+"),
         verbose_name= _("Server"),
     )
     socila_media= models.ManyToManyField(
@@ -289,7 +289,7 @@ class EMail(CommunicationWay):
 
 class Mobile(Phone):
     netWork_code= models.ForeignKey(
-        MobileNetWork,
+        "Facility.MobileNetWork",
         on_delete= models.CASCADE,
         related_name= _("Mobiles"),
         verbose_name= _("NetWork Code"),

@@ -302,6 +302,41 @@ gulp.task('copy:libs', function () {
             .pipe(gulp.dest(destPath));
 });
 
-gulp.task('build', gulp.series(gulp.parallel('clean:dist', 'copy:all', 'copy:libs','bootstrap', 'scss', 'js', 'jsPages', 'icon','custom'), gulp.parallel('scss')));
+gulp.task(
+    'build',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist',
+            'copy:all',
+            'copy:libs',
+            'bootstrap',
+            'scss',
+            'js',
+            'jsPages',
+            'icon',
+            'custom',
+        ),
+        gulp.parallel(
+            'scss',
+        ),
+    ),
+);
 
-gulp.task('default', gulp.series(gulp.parallel('clean:dist', 'copy:all', 'copy:libs', 'bootstrap', 'scss', 'js', 'jsPages', 'icon','custom'), gulp.parallel('watch')));
+gulp.task(
+    'default',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist',
+            'copy:all',
+            'copy:libs',
+            'bootstrap',
+            'scss', 'js',
+            'jsPages',
+            'icon',
+            'custom',
+        ),
+        gulp.parallel(
+            'watch',
+        ),
+    ),
+);

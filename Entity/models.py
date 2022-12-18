@@ -3,20 +3,53 @@ from django.utils.translation import gettext_lazy as _
 
 from polymorphic.models import PolymorphicModel
 
-from GraphQL.models import BaseModel, BaseModelImage
+from GraphQL.models import BaseModelImage
 from Location.models import CommunicationWay
 
 # Create your models here.
 
 
-class Entity(PolymorphicModel, BaseModelImage, BaseModel):
+class Entity(PolymorphicModel, BaseModelImage):
 
-    public_communication_ways= models.ManyToManyField(
+    communication_ways= models.ManyToManyField(
         CommunicationWay,
-        related_name= _("Public_Communication_Way"),
-        verbose_name= _("Public Communication Ways"),
+        through= "EntityCommunicationWay",
+        verbose_name= _("Communication Ways"),
     )  # طرق الاتصال
+    created_date= models.DateTimeField(
+        auto_now_add= True,
+        editable= False,
+        verbose_name= _("Created Date"),
+    )
 
     class Meta:
         verbose_name= _("Entity")
         verbose_name_plural= _("Entities")
+
+
+class EntityCommunicationWay(models.Model):
+    entity= models.ForeignKey(
+        Entity,
+        on_delete= models.CASCADE,
+        verbose_name= _("Entity"),
+    )
+    communication_way= models.ForeignKey(
+        CommunicationWay,
+        on_delete= models.CASCADE,
+        related_name= _("Entities"),
+        verbose_name= _("Communication Way"),
+    )
+    is_owner= models.BooleanField(
+        default= True,
+        verbose_name= _("is Owner"),
+    )
+
+    class Meta:
+        unique_together= [
+            [
+                "entity",
+                "communication_way",
+            ]
+        ]
+        verbose_name= _("Entity CommunicationWay")
+        verbose_name_plural= _("Entity CommunicationWays")

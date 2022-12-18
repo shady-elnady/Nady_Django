@@ -36,7 +36,7 @@ class Digit(BaseModelImage, BaseModel):
   #   ready = np.expand_dims(ready, axis=0)
   #   print(ready.shape)
   #   try:
-  #     file_model = os.path.join(settings.BASE_DIR, 'Model/CNN_model.h5')
+  #     file_model = os.path.join(settings.BASE_DIR, 'Digit/Model/CNN_model.h5')
   #     # graph = ops.get_default_graph()
   #     graph = tf.compat.v1.get_default_graph()
   #     with graph.as_default():

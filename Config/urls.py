@@ -23,7 +23,7 @@ import debug_toolbar
 
 
 urlpatterns = [
-    path('account', include('Account.urls')), # allauth 3rd Library
+    path('account/', include('Account.urls')), # allauth 3rd Library
     path("", include("django.contrib.auth.urls")), # Default Auth URL
     path('accounts/', include('allauth.urls')), # allauth 3rd Library
     path("", include("Laboratory.urls", namespace="Laboratory")),

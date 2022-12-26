@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>CodePen - #2 in 2021 / Welcome / CSS Stylus Pug</title>
+  <link rel="stylesheet" href="{% static 'Splash/CSS/index.css' %}">
+  <style>
+    {{ text_style|safe }}
+    {{ frame_style|safe }}
+    {{ particles_style|safe }}
+  </style>
+  </head>
+  <body>
+    <!-- partial:index.partial.html -->
+    {% comment %} {% for word_data in words_data %}
+      <div
+        class='background'
+        style="
+          left: {{ word_data.bg_left }}%;
+          height: 100vh;
+          background-color: {{ word_data.bg_color }};
+        "
+      ></div>
+    {% endfor %} {% endcomment %}
+    {{ background_tags|safe }}
+  
+    <div class="criterion">
+      {{ text_tags|safe }}
+      {{ frame_tags|safe }}
+      {{ particles_tags|safe }}
+      {% comment %} {% for word_data in words_data %}
+        {% with index=forloop.counter|add:"-1" %}
+          <style>
+            .text{{index}} {
+              left: {{ word_data.left }}px;
+              top: 0;
+              -webkit-animation: text-animation 1s ease-in-out {{ word_data.text_s }}s 1 normal forwards, text2-animation{{index}} 2s ease-in-out 5s 1 normal forwards;
+                      animation: text-animation 1s ease-in-out {{ word_data.text_s }}s 1 normal forwards, text2-animation{{index}} 2s ease-in-out 5s 1 normal forwards;
+            }
+            .text{{index}}::after {
+              -webkit-animation: text-after-animation{{index}} 2s ease-in-out 3s 1 normal forwards;
+                      animation: text-after-animation{{index}} 2s ease-in-out 3s 1 normal forwards;
+            }
+            @-webkit-keyframes text-after-animation{{index}} {
+              0% {
+                width: 0px;
+                background-color: {{ word_data.bg_color }};
+                opacity: 1;
+              }
+              50% {
+                width: 40px;
+                opacity: 1;
+              }
+              100% {
+                left: 40px;
+                opacity: 0;
+              }
+            }
+            @keyframes text-after-animation{{index}} {
+              0% {
+                width: 0px;
+                background-color: {{ word_data.bg_color }};
+                opacity: 1;
+              }
+              50% {
+                width: 40px;
+                opacity: 1;
+              }
+              100% {
+                left: 40px;
+                opacity: 0;
+              }
+            }
+            @-webkit-keyframes text2-animation{{index}} {
+              0% {
+                left: {{ word_data.left }}px;
+                opacity: 1; {% if forloop.last %}
+                  transform: scale(1, 1); 
+                {% endif %}
+              }
+              50% {
+                left: {{ word_data.left2 }}px;
+                opacity: 0; {% if forloop.last %}
+                transform: scale(1, 1); 
+              {% endif %}
+              } {% if forloop.last %}
+              65% {
+                top: 0;
+                transform: scale(1, 1);
+              }
+              70% {
+                transform: scale(3, 3) rotate(90deg);
+                top: -30px;
+              }
+              75% {
+                left: 180px;
+                top: 0;
+                opacity: 1;
+                transform: scale(2, 2) rotate(90deg);
+              }
+              85% {
+                left: 180px;
+              }
+              {% endif %}                
+              100% {
+                left: 1000px;
+                opacity: 0; {% if forloop.last %}
+                transform: scale(2, 2) rotate(90deg);
+              {% endif %}
+              }
+            }
+            @keyframes text2-animation{{index}}  { 
+              0% {
+                left: {{ word_data.left }}px;
+                opacity: 1; {% if forloop.last %}
+                  transform: scale(1, 1); 
+                {% endif %}
+              }
+              50% {
+                left: {{ word_data.left2 }}px;
+                opacity: 0; {% if forloop.last %}
+                transform: scale(1, 1); 
+              {% endif %}
+              } {% if forloop.last %}
+              65% {
+                top: 0;
+                transform: scale(1, 1);
+              }
+              70% {
+                transform: scale(3, 3) rotate(90deg);
+                top: -30px;
+              }
+              75% {
+                left: 180px;
+                top: 0;
+                opacity: 1;
+                transform: scale(2, 2) rotate(90deg);
+              }
+              85% {
+                left: 180px;
+              }
+              {% endif %}                
+              100% {
+                left: 1000px;
+                opacity: 0; {% if forloop.last %}
+                transform: scale(2, 2) rotate(90deg);
+              {% endif %}
+              }
+            }
+          </style>
+          <div class="text text{{index}}">{{ word_data.word }}</div>
+          <div
+            class="frame"
+            style="
+              left: {{ word_data.left }}px;
+              top: 0;
+              background-color: {{ word_data.bg_color }};
+              -webkit-animation: frame-animation 1s ease-in-out {{ word_data.fram_ms }}ms 1 normal forwards;
+                      animation: frame-animation 1s ease-in-out {{ word_data.fram_ms }}ms 1 normal forwards;
+            "
+          ></div>
+          {% for particle in word_data.particles %}
+            <style>
+              @-webkit-keyframes particle-animation{{index}}{{ particle.index }} {
+                0% {
+                  left: {{ word_data.left }}px;
+                  top: 0;
+                  opacity: 0;
+                  transform: scale(1, 1);
+                }
+                100% {
+                  left: {{ particle.left }}px;
+                  top: {{ particle.top }}px;
+                  opacity: 1;
+                  transform: scale(0, 0);
+                }
+              }
+              @keyframes particle-animation{{index}}{{ particle.index }} {
+                0% {
+                  left: {{ word_data.left }}px;
+                  top: 0;
+                  opacity: 0;
+                  transform: scale(1, 1);
+                }
+                100% {
+                  left: {{ particle.left }}px;
+                  top: {{ particle.top }}px;
+                  opacity: 1;
+                  transform: scale(0, 0);
+                }
+              }
+            </style>
+            <div
+              class="particle"
+              style="
+                left: {{ word_data.left }}px;
+                opacity: 0;
+                background-color: {{ word_data.bg_color }};
+                -webkit-animation: particle-animation{{index}}{{ particle.index }} 1s ease-in-out {{ word_data.text_s }}s 1 normal forwards;
+                        animation: particle-animation{{index}}{{ particle.index }} 1s ease-in-out {{ word_data.text_s }}s 1 normal forwards;
+              "
+            ></div>
+          {% endfor %}          
+
+        {% endwith %}
+      {% endfor %} {% endcomment %}
+    </div>  
+  </body>
+</html>

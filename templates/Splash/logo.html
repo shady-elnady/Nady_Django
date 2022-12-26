@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - 3D logo animation</title>
+  <link rel="stylesheet" href="{% static 'Splash/Css/logo.css' %}">
+
+</head>
+<body>
+
+<!-- partial:index.partial.html -->
+<div class="slide-frame card--flipY">
+  
+  <div class="slide front">
+    <div class="content">
+    <span >El Nady Lab</span>
+    </div>
+  </div>
+  
+  <div class="slide back">
+        <img src="{% static 'Splash/SVG/logo.svg' %}" alt="" class="content" />
+  </div>
+</div>
+<!-- partial -->
+  
+</body>
+</html>
